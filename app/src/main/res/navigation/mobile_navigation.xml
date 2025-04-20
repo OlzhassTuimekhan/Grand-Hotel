@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="kz.grand_hotel.ui.menu.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_my_booking"
+        android:name="kz.grand_hotel.ui.menu.ui.booking.MyBookingFragment"
+        android:label="@string/my_booking"
+        tools:layout="@layout/fragment_my_booking" />
+
+    <fragment
+        android:id="@+id/navigation_message"
+        android:name="kz.grand_hotel.ui.menu.ui.message.MessageFragment"
+        android:label="@string/message"
+        tools:layout="@layout/fragment_message" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="kz.grand_hotel.ui.menu.ui.profile.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
