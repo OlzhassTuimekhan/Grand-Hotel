@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Гранд-Отель</string>
+    <string name="hello_blank_fragment">Сәлем, бос фрагмент</string>
+    <string name="title_activity_login">Кіру</string>
+    <string name="prompt_email">Электрондық пошта</string>
+    <string name="prompt_password">Құпия сөз</string>
+    <string name="action_sign_in">Кіру немесе тіркелу</string>
+    <string name="action_sign_in_short">Кіру</string>
+    <string name="welcome">Қош келдіңіз!</string>
+    <string name="invalid_username">Жарамсыз пайдаланушы аты</string>
+    <string name="invalid_password">Құпия сөз >5 таңба болуы керек</string>
+    <string name="login_failed">Кіру сәтсіз аяқталды</string>
+    <string name="title_activity_menu">Мәзір</string>
+    <string name="title_home">Басты бет</string>
+    <string name="title_dashboard">Басқару тақтасы</string>
+    <string name="title_notifications">Хабарландырулар</string>
+    <string name="my_booking">Менің брондарым</string>
+    <string name="message">Хабарламалар</string>
+    <string name="profile">Профиль</string>
+    <string name="personal_info">Жеке ақпарат</string>
+    <string name="notifications">Хабарландырулар</string>
+    <string name="first_term">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.</string>
+    <string name="second_term">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.</string>
+    <string name="third_term">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.</string>
+    <string name="fourth_term">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.</string>
+    <string name="security">Қауіпсіздік</string>
+    <string name="languages">Тілдер</string>
+</resources>

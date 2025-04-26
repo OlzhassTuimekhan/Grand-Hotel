@@ -7,5 +7,8 @@
     <color name="indicator_active">#2853AF</color>
     <color name="indicator_inactive">#BFC6CC</color>
     <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="notification_red">#F41F52</color>
 
 </resources>

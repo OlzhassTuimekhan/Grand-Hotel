@@ -22,10 +22,64 @@
         android:name="kz.grand_hotel.ui.menu.ui.message.MessageFragment"
         android:label="@string/message"
         tools:layout="@layout/fragment_message" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.message.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat">
+        <argument
+            android:name="messageItem"
+            app:argType="kz.grand_hotel.ui.menu.ui.message.MessageItem" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="kz.grand_hotel.ui.menu.ui.profile.ProfileFragment"
         android:label="@string/profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+
+        <action android:id="@+id/action_navigation_profile_to_navigation_personal_info"
+            app:destination="@id/navigation_personal_info" />
+        <action android:id="@+id/action_navigation_profile_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
+        <action android:id="@+id/action_navigation_profile_to_navigation_security"
+            app:destination="@id/navigation_security" />
+        <action android:id="@+id/action_navigation_profile_to_navigation_languages"
+            app:destination="@id/navigation_languages" />
+        <action android:id="@+id/action_navigation_profile_to_navigation_support"
+            app:destination="@id/navigation_support" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_personal_info"
+        android:name="kz.grand_hotel.ui.menu.ui.profile.PersonalInfoFragment"
+        android:label="@string/personal_info"
+        tools:layout="@layout/fragment_personal_info" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="kz.grand_hotel.ui.menu.ui.profile.NotificationsFragment"
+        android:label="@string/notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_security"
+        android:name="kz.grand_hotel.ui.menu.ui.profile.SecurityFragment"
+        android:label="@string/security"
+        tools:layout="@layout/fragment_security" />
+
+    <fragment
+        android:id="@+id/navigation_languages"
+        android:name="kz.grand_hotel.ui.menu.ui.profile.LanguagesFragment"
+        android:label="@string/languages"
+        tools:layout="@layout/fragment_languages" />
+
+    <fragment
+        android:id="@+id/navigation_support"
+        android:name="kz.grand_hotel.ui.menu.ui.profile.SupportFragment"
+        android:label="Help and Support"
+        tools:layout="@layout/fragment_support" />
+
 </navigation>
