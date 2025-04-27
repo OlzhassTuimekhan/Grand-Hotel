@@ -48,6 +48,8 @@ dependencies {
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.4.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.4.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:17.0.0")
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)

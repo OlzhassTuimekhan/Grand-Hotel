@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Grand-Hotel</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -54,5 +53,7 @@
     <string name="most_popular">Most Popular</string>
     <string name="see_all">See All</string>
     <string name="you_can_change_location">You Can Change Your Location to show nearby villas</string>
+    <string name="hotel_near_you">Hotel Near You</string>
+    <string name="open_map">Open Map</string>
 
 </resources>

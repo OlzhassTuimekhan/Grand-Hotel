@@ -9,7 +9,17 @@
         android:id="@+id/navigation_home"
         android:name="kz.grand_hotel.ui.menu.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.MapFragment"
+        android:label="Map"
+        tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_my_booking"

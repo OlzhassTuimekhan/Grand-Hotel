@@ -10,5 +10,6 @@
     <color name="green">#00FF00</color>
     <color name="yellow">#FFFF00</color>
     <color name="notification_red">#F41F52</color>
+    <color name="new_blue">#E8F2FF</color>
 
 </resources>

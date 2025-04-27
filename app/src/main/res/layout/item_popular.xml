@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="8dp"
     app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@color/new_blue"
     app:cardElevation="2dp">
 
     <LinearLayout
@@ -15,7 +16,7 @@
 
         <FrameLayout
             android:layout_width="160dp"
-            android:layout_height="100dp">
+            android:layout_height="160dp">
 
             <ImageView
                 android:id="@+id/propertyImageView"
