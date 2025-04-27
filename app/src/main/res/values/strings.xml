@@ -55,5 +55,6 @@
     <string name="you_can_change_location">You Can Change Your Location to show nearby villas</string>
     <string name="hotel_near_you">Hotel Near You</string>
     <string name="open_map">Open Map</string>
+    <string name="booking_now">Booking Now</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package kz.grand_hotel.ui.menu.ui.home
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -31,6 +32,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -103,6 +105,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                     homeViewModel.hotels.observe(viewLifecycleOwner) { hotels ->
                         addHotelMarkers(hotels)
+                        googleMap?.setOnMarkerClickListener { marker ->
+                            val hotelName = marker.title
+                            val hotelLocation = marker.position
+
+                            // Find the matching hotel from your list (you can use a unique identifier, e.g., hotel name)
+                            val hotel = hotels.find { it.name == hotelName }
+
+                            // If the hotel is found, show the bottom sheet
+                            hotel?.let {
+                                val bottomSheetFragment = HotelBottomSheetFragment(it)
+                                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+                            }
+
+                            true
+                        }
                     }
                 }
             }
@@ -152,9 +169,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
-            // Нарисуем белый круговой фон
+            // Draw white circle background
             val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            backgroundPaint.color = Color.WHITE
+            backgroundPaint.color = Color.BLUE
             canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), (width / 2).toFloat(), backgroundPaint)
 
             try {
@@ -162,7 +179,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if (hotelDrawable != null) {
                     val imageSize = 80f
                     val imageX = (width - imageSize) / 2f
-                    val imageY = (height - 90f) / 2f // Отрегулируйте вертикальное положение
+                    val imageY = (height - 90f) / 2f // Adjust vertical positioning
                     drawCircularImage(canvas, hotelDrawable, imageX, imageY, imageSize)
                 } else {
                     Log.e("MapFragment", "Drawable resource not found: ${hotel.image}")
@@ -171,13 +188,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Log.e("MapFragment", "Error loading drawable: ${e.message}")
             }
 
-            // Нарисуем желтую окружность для рейтинга
+            // Draw yellow circle for rating
             val ratingCircleRadius = 28f
             val ratingCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG)
             ratingCirclePaint.color = ContextCompat.getColor(requireContext(), R.color.yellow)
             canvas.drawCircle((width / 2).toFloat(), height - ratingCircleRadius - 10f, ratingCircleRadius, ratingCirclePaint)
 
-            // Нарисуем текст рейтинга
+            // Draw rating text
             val ratingTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
             ratingTextPaint.color = Color.BLACK
             ratingTextPaint.textSize = 20f
@@ -199,7 +216,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             )
         }
     }
-
 
     private fun drawCircularImage(canvas: Canvas, drawable: Drawable, x: Float, y: Float, size: Float) {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
