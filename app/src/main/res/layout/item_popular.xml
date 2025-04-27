@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/placeholder_hotel" />
+                tools:src="@drawable/ic_onboarding1" />
 
             <ImageView
                 android:layout_width="24dp"
@@ -44,19 +44,21 @@
                 android:textSize="10sp"
                 android:layout_gravity="bottom|start"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                android:visibility="gone"/>
 
         </FrameLayout>
 
         <TextView
             android:id="@+id/propertyNameTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="34dp"
+            android:fontFamily="@font/jost_semibold"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
-            android:textSize="14sp"
             android:textColor="@android:color/black"
+            android:textSize="14sp"
             android:textStyle="bold"
             tools:text="The Horizon Retreat" />
 
@@ -68,7 +70,8 @@
             android:paddingEnd="8dp"
             android:textSize="12sp"
             android:textColor="#757575"
-            tools:text="Los Angeles, CA" />
+            tools:text="Los Angeles, CA"
+            android:fontFamily="@font/jost_semibold"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,13 +87,13 @@
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:textColor="@color/blue"
-                tools:text="$480/night" />
+                tools:text="$480/night"
+                android:fontFamily="@font/jost_semibold"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_star"
-                android:tint="#FFC107"
                 android:layout_marginStart="4dp" />
 
             <TextView
@@ -100,6 +103,7 @@
                 android:textSize="12sp"
                 android:textColor="@android:color/black"
                 tools:text="4.5"
+                android:fontFamily="@font/jost_medium"
                 android:layout_marginStart="4dp" />
 
         </LinearLayout>

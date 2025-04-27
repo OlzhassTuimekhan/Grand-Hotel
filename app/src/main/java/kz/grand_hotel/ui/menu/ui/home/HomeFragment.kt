@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var propertyAdapter: PropertyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +31,17 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        propertyAdapter = PropertyAdapter()
+        binding.recyclerViewMostPopular.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        binding.recyclerViewMostPopular.adapter = propertyAdapter
+
+        homeViewModel.properties.observe(viewLifecycleOwner) { properties ->
+            propertyAdapter.submitList(properties)
+        }
 
     }
 

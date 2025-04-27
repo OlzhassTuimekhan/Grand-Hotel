@@ -34,9 +34,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
+                android:fontFamily="@font/jost_medium"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                tools:text="Matr Kohler" />
+                tools:text="Olzhas Tuimekhan" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,8 +48,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_small"
-                    android:tint="#757575" />
+                    android:src="@drawable/ic_location_small"/>
 
                 <TextView
                     android:id="@+id/userLocationTextView"
@@ -56,8 +56,9 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:textColor="#757575"
+                    android:fontFamily="@font/jost_medium"
                     android:layout_marginStart="4dp"
-                    tools:text="San Diego, CA" />
+                    tools:text="Almaty, KZ" />
 
             </LinearLayout>
 
@@ -103,35 +104,37 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#E8F0FE">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_location_pin_blue" />
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/you_can_change_location"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:layout_marginStart="12dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location_pin_blue" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_right_gray" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/you_can_change_location"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="12dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_right_gray" />
 
         </LinearLayout>
 
@@ -149,6 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/most_popular"
+            android:fontFamily="@font/jost_semibold"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
@@ -158,6 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/see_all"
+            android:fontFamily="@font/jost_semibold"
             android:textSize="14sp"
             android:textColor="@color/blue" />
 

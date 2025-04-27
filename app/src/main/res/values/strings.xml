@@ -53,5 +53,6 @@
     <string name="send_message">Send message</string>
     <string name="most_popular">Most Popular</string>
     <string name="see_all">See All</string>
+    <string name="you_can_change_location">You Can Change Your Location to show nearby villas</string>
 
 </resources>
