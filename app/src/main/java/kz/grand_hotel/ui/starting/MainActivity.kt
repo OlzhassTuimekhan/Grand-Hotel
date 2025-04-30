@@ -7,6 +7,7 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 
 import kz.grand_hotel.R
+import kz.grand_hotel.ui.authorization.AuthorizationActivity
 import kz.grand_hotel.ui.menu.MenuActivity
 
 //Hello
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val getStartedActivityIntent = Intent(this, MenuActivity::class.java)
+            val getStartedActivityIntent = Intent(this, AuthorizationActivity::class.java)
             startActivity(getStartedActivityIntent)
 
             finish()

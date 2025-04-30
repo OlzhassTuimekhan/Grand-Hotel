@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,16 +16,28 @@ import android.widget.ImageView
 import android.widget.TextView
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentSignInBinding
+import kz.grand_hotel.ui.GlobalData
 import kz.grand_hotel.ui.authorization.register.ForgotFragment
 import kz.grand_hotel.ui.authorization.register.SignUpFragment
 import kz.grand_hotel.ui.menu.MenuActivity
 import kz.grand_hotel.ui.starting.GetStartedActivity
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class SignInFragment : Fragment() {
 
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
     private var isPasswordVisible = false
+    private val client = OkHttpClient()
+    private var globalData = GlobalData()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,21 +60,17 @@ class SignInFragment : Fragment() {
                 showSignUpFragment()
             }
 
-            signInButton.setOnClickListener {
+            binding.signInButton.setOnClickListener {
                 val email = binding.emailEditText.text.toString().trim()
+                val password = binding.passwordEditText.text.toString()
 
                 if (!isEmailValid(email)) {
                     binding.emailEditText.error = "Invalid email address"
                 } else {
-                    val email = emailEditText.text.toString()
-                    val password = passwordEditText.text.toString()
-//                    login(email, password)
-                    val menuActivityIntent = Intent(this@SignInFragment.requireContext(), MenuActivity::class.java)
-                    startActivity(menuActivityIntent)
-
-
+                    login(email, password)
                 }
             }
+
 
             forgotPasswordTextView.setOnClickListener {
                 showForgotFragment()
@@ -79,12 +88,56 @@ class SignInFragment : Fragment() {
 
     }
 
+    private fun login(email: String, password: String) {
+        val url = "${globalData.ip}signin"
+
+        val jsonBody = JSONObject()
+        jsonBody.put("email", email)
+        jsonBody.put("password", password)
+
+        val mediaType = "application/json".toMediaTypeOrNull()
+        val body = RequestBody.create(mediaType, jsonBody.toString())
+
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .addHeader("Accept", "application/json")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    // Обрабатываем успешный ответ
+                    val responseData = response.body?.string()
+                    val jsonResponse = JSONObject(responseData)
+                    val token = jsonResponse.getString("token")
+
+                    globalData.token = token
+                    Log.d("Login", "Token saved: $token")
+
+                    navigateToMenu()
+                } else {
+                    Log.e("Login", "Failed to login: ${response.message}")
+                }
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("Login", "Request failed: ${e.message}")
+            }
+        })
+    }
+
     private fun showSignUpFragment() {
         val signUpFragment = SignUpFragment()
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, signUpFragment)
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    private fun navigateToMenu() {
+        val menuActivityIntent = Intent(this@SignInFragment.requireContext(), MenuActivity::class.java)
+        startActivity(menuActivityIntent)
     }
 
     private fun showForgotFragment() {

@@ -14,14 +14,20 @@ import androidx.navigation.fragment.findNavController
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentProfileBinding
+import kz.grand_hotel.ui.GlobalData
 import kz.grand_hotel.ui.authorization.AuthorizationActivity
 import kz.grand_hotel.ui.authorization.login.SignInFragment
 import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.io.IOException
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private val client = OkHttpClient()
+    private val globalData = GlobalData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +66,7 @@ class ProfileFragment : Fragment() {
                 val logoutButton = dialogView.findViewById<Button>(R.id.logoutButton)
                 logoutButton.setOnClickListener {
                     dialog.dismiss()
-                    val intent = Intent(requireContext(), AuthorizationActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+                    performLogout()
                 }
                 val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
                 cancelButton.setOnClickListener {
@@ -90,6 +94,40 @@ class ProfileFragment : Fragment() {
 
 
         }
+    }
+
+    private fun performLogout() {
+        val token = GlobalData().token // Assume you have your token in GlobalData
+
+        val url = "${globalData.ip}logout"
+        val requestBody = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            "{}"
+        )
+
+        val request = Request.Builder()
+            .url(url)
+            .header("Authorization", "Bearer $token")  // Pass token for authorization
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val intent = Intent(requireContext(), AuthorizationActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                } else {
+                    requireActivity().runOnUiThread {
+
+                    }
+                }
+            }
+        })
     }
 
 }
