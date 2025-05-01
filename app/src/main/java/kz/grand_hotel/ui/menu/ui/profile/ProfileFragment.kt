@@ -19,6 +19,8 @@ import kz.grand_hotel.ui.authorization.AuthorizationActivity
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
+import kz.grand_hotel.utils.showLoading
+import kz.grand_hotel.utils.hideLoading
 
 class ProfileFragment : Fragment() {
 
@@ -94,6 +96,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun performLogout() {
+        showLoading()
         val sharedPreferences = requireActivity().getSharedPreferences("user_preferences", AppCompatActivity.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
 
@@ -112,6 +115,9 @@ class ProfileFragment : Fragment() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    hideLoading()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -126,10 +132,14 @@ class ProfileFragment : Fragment() {
                             .apply {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             }
+                        requireActivity().runOnUiThread {
+                            hideLoading()
+                        }
                         startActivity(intent)
                     }
                 } else {
                     requireActivity().runOnUiThread {
+                        hideLoading()
                         Log.e("Log Out", "Ошибка при выходе: ${response.code}")
                     }
                 }

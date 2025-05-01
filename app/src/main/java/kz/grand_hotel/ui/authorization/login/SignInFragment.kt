@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentSignInBinding
@@ -20,6 +20,8 @@ import kz.grand_hotel.ui.GlobalData
 import kz.grand_hotel.ui.authorization.register.ForgotFragment
 import kz.grand_hotel.ui.authorization.register.SignUpFragment
 import kz.grand_hotel.ui.menu.MenuActivity
+import kz.grand_hotel.utils.showLoading
+import kz.grand_hotel.utils.hideLoading
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -86,15 +88,14 @@ class SignInFragment : Fragment() {
     }
 
     private fun login(email: String, password: String) {
+        showLoading()
+
         val url = "https://grand-hotel-production.up.railway.app/api/signin"
-
-        val jsonBody = JSONObject()
-        jsonBody.put("email", email)
-        jsonBody.put("password", password)
-
-        val mediaType = "application/json".toMediaTypeOrNull()
-        val body = RequestBody.create(mediaType, jsonBody.toString())
-
+        val jsonBody = JSONObject().apply {
+            put("email", email)
+            put("password", password)
+        }
+        val body = RequestBody.create("application/json".toMediaTypeOrNull(), jsonBody.toString())
         val request = Request.Builder()
             .url(url)
             .post(body)
@@ -102,31 +103,37 @@ class SignInFragment : Fragment() {
             .build()
 
         client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    val responseData = response.body?.string()
-
-                    val jsonResponse = JSONObject(responseData)
-                    val token = jsonResponse.getString("token")
-
-                    val sharedPreferences = requireActivity().getSharedPreferences("user_preferences", AppCompatActivity.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putString("token", token)
-                    editor.apply()
-
-                    GlobalData.token = token
-
-                    navigateToMenu()
-                } else {
-
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    hideLoading()
+                    Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("Login", "Request failed: ${e.message}")
-                e.printStackTrace()            }
+            override fun onResponse(call: Call, response: Response) {
+                val bodyString = response.body?.string()
+                requireActivity().runOnUiThread {
+                    hideLoading()
+                }
+
+                if (response.isSuccessful) {
+                    val token = JSONObject(bodyString).getString("token")
+                    requireActivity().getSharedPreferences("user_preferences", AppCompatActivity.MODE_PRIVATE)
+                        .edit().putString("token", token).apply()
+                    GlobalData.token = token
+
+                    requireActivity().runOnUiThread {
+                        navigateToMenu()
+                    }
+                } else {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), "Login failed: ${response.code}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         })
     }
+
 
 
     private fun showSignUpFragment() {

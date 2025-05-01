@@ -1,24 +1,25 @@
 package kz.grand_hotel.ui.authorization.register
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentForgotBinding
-import kz.grand_hotel.databinding.FragmentSignInBinding
-
+import kz.grand_hotel.ui.GlobalData
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import org.json.JSONObject
+import java.io.IOException
 
 class ForgotFragment : Fragment() {
 
     private var _binding: FragmentForgotBinding? = null
     private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private val client = OkHttpClient()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,31 +33,71 @@ class ForgotFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-
             backButton.setOnClickListener {
-                activity?.supportFragmentManager?.popBackStack()
+                parentFragmentManager.popBackStack()
             }
 
             nextButton.setOnClickListener {
-                val email = binding.emailEditText.text.toString().trim()
+                val email = emailEditText.text.toString().trim()
                 if (email.isEmpty()) {
-                    binding.emailEditText.error = "Email is required"
+                    emailEditText.error = "Email is required"
                 } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    binding.emailEditText.error = "Invalid email address"
+                    emailEditText.error = "Invalid email address"
                 } else {
-                    val bundle = Bundle()
-                    bundle.putString("email", email)
-                    val OtpResetFragment = OtpResetFragment()
-                    activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.container, OtpResetFragment)
-                        ?.addToBackStack(null)
-                        ?.commit()
+                    sendOtp(email)
                 }
-
             }
-
         }
     }
 
+    private fun sendOtp(email: String) {
+        val url = "${GlobalData.ip}send-otp"
+        val jsonBody = JSONObject().apply {
+            put("email", email)
+        }
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            jsonBody.toString()
+        )
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .addHeader("Accept", "application/json")
+            .build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("ForgotFragment", "Network error: ${e.message}")
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val respString = response.body?.string()
+                if (response.isSuccessful) {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), "OTP sent to your email", Toast.LENGTH_SHORT).show()
+                        val bundle = Bundle().apply {
+                            putString("email", email)
+                        }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.container, OtpResetFragment().apply { arguments = bundle })
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                } else {
+                    Log.e("ForgotFragment", "Error ${response.code}: $respString")
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), "Failed to send OTP", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
