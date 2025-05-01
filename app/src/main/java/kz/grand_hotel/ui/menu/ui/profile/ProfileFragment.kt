@@ -3,12 +3,15 @@ package kz.grand_hotel.ui.menu.ui.profile
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings.Global
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kz.grand_hotel.R
@@ -27,7 +30,6 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val client = OkHttpClient()
-    private val globalData = GlobalData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,8 +67,10 @@ class ProfileFragment : Fragment() {
 
                 val logoutButton = dialogView.findViewById<Button>(R.id.logoutButton)
                 logoutButton.setOnClickListener {
-                    dialog.dismiss()
                     performLogout()
+
+
+                    dialog.dismiss()
                 }
                 val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
                 cancelButton.setOnClickListener {
@@ -97,9 +101,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun performLogout() {
-        val token = GlobalData().token // Assume you have your token in GlobalData
+        val sharedPreferences = requireActivity().getSharedPreferences("user_preferences", AppCompatActivity.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
 
-        val url = "${globalData.ip}logout"
+        val url = "${GlobalData.ip}logout"
         val requestBody = RequestBody.create(
             "application/json".toMediaTypeOrNull(),
             "{}"
@@ -107,7 +112,7 @@ class ProfileFragment : Fragment() {
 
         val request = Request.Builder()
             .url(url)
-            .header("Authorization", "Bearer $token")  // Pass token for authorization
+            .header("Authorization", "Bearer $token")
             .post(requestBody)
             .build()
 
@@ -118,12 +123,16 @@ class ProfileFragment : Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
+                    val editor = sharedPreferences.edit()
+                    editor.remove("token")
+                    editor.apply()
+
                     val intent = Intent(requireContext(), AuthorizationActivity::class.java)
                     startActivity(intent)
                     activity?.finish()
                 } else {
                     requireActivity().runOnUiThread {
-
+                        Log.e("Log Out ", "Error with Log out: " )
                     }
                 }
             }

@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentSignInBinding
 import kz.grand_hotel.ui.GlobalData
@@ -37,12 +38,10 @@ class SignInFragment : Fragment() {
     private val binding get() = _binding!!
     private var isPasswordVisible = false
     private val client = OkHttpClient()
-    private var globalData = GlobalData()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -89,11 +88,14 @@ class SignInFragment : Fragment() {
     }
 
     private fun login(email: String, password: String) {
-        val url = "${globalData.ip}signin"
+        val url = "https://grand-hotel-production.up.railway.app/api/signin"
+        Log.d("Login", "Request URL: $url")
 
         val jsonBody = JSONObject()
         jsonBody.put("email", email)
         jsonBody.put("password", password)
+
+        Log.d("Login", "Request Body: $jsonBody")
 
         val mediaType = "application/json".toMediaTypeOrNull()
         val body = RequestBody.create(mediaType, jsonBody.toString())
@@ -104,28 +106,38 @@ class SignInFragment : Fragment() {
             .addHeader("Accept", "application/json")
             .build()
 
+        Log.d("Login", "Request created: $request")
+
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    // Обрабатываем успешный ответ
                     val responseData = response.body?.string()
+                    Log.d("Login", "Response successful: $responseData")
+
                     val jsonResponse = JSONObject(responseData)
                     val token = jsonResponse.getString("token")
 
-                    globalData.token = token
+                    val sharedPreferences = requireActivity().getSharedPreferences("user_preferences", AppCompatActivity.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("token", token)
+                    editor.apply()
+
+                    GlobalData.token = token
                     Log.d("Login", "Token saved: $token")
 
                     navigateToMenu()
                 } else {
                     Log.e("Login", "Failed to login: ${response.message}")
+                    Log.e("Login", "Response code: ${response.code}")
                 }
             }
 
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("Login", "Request failed: ${e.message}")
-            }
+                e.printStackTrace()            }
         })
     }
+
 
     private fun showSignUpFragment() {
         val signUpFragment = SignUpFragment()

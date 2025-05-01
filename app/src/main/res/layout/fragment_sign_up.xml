@@ -68,6 +68,34 @@
             app:layout_constraintTop_toBottomOf="@+id/fullNameLabelTextView" />
 
         <TextView
+            android:id="@+id/nicknameLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Nickname"
+            android:fontFamily="@font/jost_medium"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fullNameEditText" />
+
+        <EditText
+            android:id="@+id/nicknameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:hint="Enter your nickname"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="#BDBDBD"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nicknameLabelTextView" />
+
+        <TextView
             android:id="@+id/emailLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +105,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fullNameEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/nicknameEditText" />
 
         <EditText
             android:id="@+id/emailEditText"
@@ -96,6 +124,34 @@
             app:layout_constraintTop_toBottomOf="@+id/emailLabelTextView" />
 
         <TextView
+            android:id="@+id/phoneLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Phone Number"
+            android:fontFamily="@font/jost_medium"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:hint="Enter your phone number"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="#BDBDBD"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneLabelTextView" />
+
+        <TextView
             android:id="@+id/passwordLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,7 +161,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/phoneEditText" />
 
         <RelativeLayout
             android:id="@+id/passwordInputLayout"
