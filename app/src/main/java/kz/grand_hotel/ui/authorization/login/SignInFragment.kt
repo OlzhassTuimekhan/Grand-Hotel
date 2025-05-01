@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentSignInBinding
@@ -21,7 +20,6 @@ import kz.grand_hotel.ui.GlobalData
 import kz.grand_hotel.ui.authorization.register.ForgotFragment
 import kz.grand_hotel.ui.authorization.register.SignUpFragment
 import kz.grand_hotel.ui.menu.MenuActivity
-import kz.grand_hotel.ui.starting.GetStartedActivity
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -89,13 +87,10 @@ class SignInFragment : Fragment() {
 
     private fun login(email: String, password: String) {
         val url = "https://grand-hotel-production.up.railway.app/api/signin"
-        Log.d("Login", "Request URL: $url")
 
         val jsonBody = JSONObject()
         jsonBody.put("email", email)
         jsonBody.put("password", password)
-
-        Log.d("Login", "Request Body: $jsonBody")
 
         val mediaType = "application/json".toMediaTypeOrNull()
         val body = RequestBody.create(mediaType, jsonBody.toString())
@@ -106,13 +101,10 @@ class SignInFragment : Fragment() {
             .addHeader("Accept", "application/json")
             .build()
 
-        Log.d("Login", "Request created: $request")
-
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val responseData = response.body?.string()
-                    Log.d("Login", "Response successful: $responseData")
 
                     val jsonResponse = JSONObject(responseData)
                     val token = jsonResponse.getString("token")
@@ -123,12 +115,10 @@ class SignInFragment : Fragment() {
                     editor.apply()
 
                     GlobalData.token = token
-                    Log.d("Login", "Token saved: $token")
 
                     navigateToMenu()
                 } else {
-                    Log.e("Login", "Failed to login: ${response.message}")
-                    Log.e("Login", "Response code: ${response.code}")
+
                 }
             }
 

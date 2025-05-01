@@ -3,24 +3,19 @@ package kz.grand_hotel.ui.menu.ui.profile
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings.Global
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kz.grand_hotel.R
-import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentProfileBinding
 import kz.grand_hotel.ui.GlobalData
 import kz.grand_hotel.ui.authorization.AuthorizationActivity
-import kz.grand_hotel.ui.authorization.login.SignInFragment
-import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
@@ -68,8 +63,6 @@ class ProfileFragment : Fragment() {
                 val logoutButton = dialogView.findViewById<Button>(R.id.logoutButton)
                 logoutButton.setOnClickListener {
                     performLogout()
-
-
                     dialog.dismiss()
                 }
                 val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
@@ -123,19 +116,25 @@ class ProfileFragment : Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val editor = sharedPreferences.edit()
-                    editor.remove("token")
-                    editor.apply()
+                    requireActivity().runOnUiThread {
+                        val editor = sharedPreferences.edit()
+                        editor.remove("token")
+                        editor.apply()
+                        GlobalData.token = null
 
-                    val intent = Intent(requireContext(), AuthorizationActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+                        val intent = Intent(requireContext(), AuthorizationActivity::class.java)
+                            .apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                        startActivity(intent)
+                    }
                 } else {
                     requireActivity().runOnUiThread {
-                        Log.e("Log Out ", "Error with Log out: " )
+                        Log.e("Log Out", "Ошибка при выходе: ${response.code}")
                     }
                 }
             }
+
         })
     }
 

@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/rounded_edittext_background"
-            android:hint="Enter your phone number"
+            android:hint="@string/_7_777_777_7777"
             android:inputType="phone"
             android:padding="12dp"
             android:textColor="@android:color/black"
