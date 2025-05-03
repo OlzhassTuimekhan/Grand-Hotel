@@ -177,11 +177,13 @@ class SignUpFragment : Fragment() {
                     if (response.isSuccessful) {
                         val j = JSONObject(resp)
                         val token = j.optString("registration_token", null)
+                        val mes = j.optString("message", null)
+                        Toast.makeText(requireContext(), mes, Toast.LENGTH_SHORT).show()
                         if (token != null) {
-                            // передаём registration_token в следующий фрагмент
+
                             parentFragmentManager.beginTransaction()
                                 .replace(
-                                    binding.root.id,
+                                    R.id.container,
                                     OtpVerificationFragment().apply {
                                         arguments = bundleOf(
                                             "registration_token" to token
@@ -191,7 +193,7 @@ class SignUpFragment : Fragment() {
                                 .addToBackStack(null)
                                 .commit()
                         } else {
-                            val err = j.optString("message", "Неизвестная ошибка")
+                            val err = j.optString("message", null)
                             binding.errorTextView.text = err
                             binding.errorTextView.visibility = View.VISIBLE
                         }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +75,7 @@ class OtpVerificationFragment : Fragment() {
     }
 
     private fun verifyOtp(otp: String) {
-        val url = "${GlobalData.ip}verify-registration-otp"
+        val url = "https://grand-hotel-production.up.railway.app/api/register/verify-otp"
         val json = JSONObject().apply {
             put("registration_token", registrationToken)
             put("otp", otp)
@@ -89,6 +90,7 @@ class OtpVerificationFragment : Fragment() {
             .post(body)
             .addHeader("Accept", "application/json")
             .build()
+        Log.d("RESPONSE BODY", "request: $req")
 
         client.newCall(req).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -107,7 +109,6 @@ class OtpVerificationFragment : Fragment() {
                             var token = j.optString("token", "")
                                 .removePrefix("Bearer ").trim()
 
-                            // сохраняем токен
                             requireActivity()
                                 .getSharedPreferences("user_preferences", 0)
                                 .edit()
