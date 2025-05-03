@@ -4,16 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentOtpVerificationBinding
 import kz.grand_hotel.ui.GlobalData
-import kz.grand_hotel.ui.authorization.login.SignInFragment
 import kz.grand_hotel.ui.menu.MenuActivity
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -26,21 +23,16 @@ class OtpVerificationFragment : Fragment() {
     private val binding get() = _binding!!
     private val client = OkHttpClient()
 
-    private var userId: Int = 0
-    private lateinit var email: String
-    private lateinit var password: String
+    private var registrationToken: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            userId = it.getInt("user_id", 0)
-            email = it.getString("email","")
-            password = it.getString("password","")
-        }
+        registrationToken = arguments?.getString("registration_token") ?: ""
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOtpVerificationBinding.inflate(inflater, container, false)
@@ -51,83 +43,98 @@ class OtpVerificationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            // переход по полю к полю
             otpDigit1TextView.addTextChangedListener(genericWatcher { otpDigit2TextView.requestFocus() })
             otpDigit2TextView.addTextChangedListener(genericWatcher { otpDigit3TextView.requestFocus() })
             otpDigit3TextView.addTextChangedListener(genericWatcher { otpDigit4TextView.requestFocus() })
 
             continueButton.setOnClickListener {
-                val code = listOf(
-                    otpDigit1TextView.text.toString(),
-                    otpDigit2TextView.text.toString(),
-                    otpDigit3TextView.text.toString(),
-                    otpDigit4TextView.text.toString()
-                ).joinToString("")
+                errorTextView.visibility = View.GONE
+                val code = listOf(otpDigit1TextView, otpDigit2TextView, otpDigit3TextView, otpDigit4TextView)
+                    .joinToString("") { it.text.toString() }
 
                 if (code.length < 4) {
                     Toast.makeText(requireContext(), "Введите полный код", Toast.LENGTH_SHORT).show()
                 } else {
-                    verifyRegistrationOtp(code)
+                    verifyOtp(code)
                 }
             }
 
-            backButton.setOnClickListener { parentFragmentManager.popBackStack() }
+            backButton.setOnClickListener {
+                parentFragmentManager.popBackStack()
+            }
         }
     }
 
-    private fun genericWatcher(onComplete: () -> Unit) = object : TextWatcher {
+    private fun genericWatcher(onDone: () -> Unit) = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            if (s?.length == 1) onComplete()
+            if (s?.length == 1) onDone()
         }
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
-    private fun verifyRegistrationOtp(otp: String) {
+    private fun verifyOtp(otp: String) {
         val url = "${GlobalData.ip}verify-registration-otp"
-
         val json = JSONObject().apply {
-            put("user_id", userId)
+            put("registration_token", registrationToken)
             put("otp", otp)
         }
-        Log.e("OTP", "OTP: $otp")
-        val body = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
 
-        val request = Request.Builder()
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
+        val req = Request.Builder()
             .url(url)
             .post(body)
             .addHeader("Accept", "application/json")
             .build()
 
-        client.newCall(request).enqueue(object : Callback {
+        client.newCall(req).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("OTP", "Network error: ${e.message}")
                 requireActivity().runOnUiThread {
                     Toast.makeText(requireContext(), "Ошибка сети", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val respString = response.body?.string()
-                if (response.isSuccessful) {
-                    val jsonResp = JSONObject(respString)
-                    val token = jsonResp.getString("token")    // Bearer ...
+                val resp = response.body?.string().orEmpty()
+                requireActivity().runOnUiThread {
+                    when (response.code) {
+                        201 -> {
+                            val j = JSONObject(resp)
+                            val message = j.optString("message", "Успешно")
+                            var token = j.optString("token", "")
+                                .removePrefix("Bearer ").trim()
 
-                    requireActivity().getSharedPreferences("user_preferences", 0)
-                        .edit().putString("token", token).apply()
-                    GlobalData.token = token
+                            // сохраняем токен
+                            requireActivity()
+                                .getSharedPreferences("user_preferences", 0)
+                                .edit()
+                                .putString("token", token)
+                                .apply()
+                            GlobalData.token = token
 
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(requireContext(), "Успешно! Вы в системе.", Toast.LENGTH_SHORT).show()
-
-                        val intent = Intent(requireContext(), MenuActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                    }
-                } else {
-                    Log.e("OTP", "Invalid OTP ${response.code}: $respString")
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(requireContext(), "Неверный код", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                            startActivity(
+                                Intent(requireContext(), MenuActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                }
+                            )
+                        }
+                        422 -> {
+                            val j = JSONObject(resp)
+                            val err = j.optString("message", "Неверный или просроченный код")
+                            binding.errorTextView.text = err
+                            binding.errorTextView.visibility = View.VISIBLE
+                        }
+                        else -> {
+                            Toast.makeText(
+                                requireContext(),
+                                "Ошибка ${response.code}: ${response.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
             }

@@ -24,6 +24,8 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
+import kz.grand_hotel.utils.showLoading
+import kz.grand_hotel.utils.hideLoading
 
 class SignUpFragment : Fragment() {
 
@@ -125,73 +127,80 @@ class SignUpFragment : Fragment() {
 
     private fun registerUser(
         name: String,
-        nickname: String,
+        nick: String,
         email: String,
         phone: String,
-        password: String,
-        passwordConfirmation: String
+        pass: String,
+        conf: String
     ) {
-        val onlyDigits = phone.replace("\\D+".toRegex(), "")
-        val normalizedDigits = if (onlyDigits.startsWith("7")) {
-            onlyDigits
-        } else {
-            "7$onlyDigits"
-        }
-        val phoneForApi = "+$normalizedDigits"
+        showLoading()
+        binding.errorTextView.visibility = View.GONE
+
+        val digits = phone.replace("\\D+".toRegex(), "")
+        val normalized = if (digits.startsWith("7")) digits else "7$digits"
+        val phoneForApi = "+$normalized"
 
         val url = "${GlobalData.ip}signup"
-
-        val jsonBody = JSONObject().apply {
+        val json = JSONObject().apply {
             put("name", name)
-            put("nickname", nickname)
+            put("nickname", nick)
             put("email", email)
             put("phone_number", phoneForApi)
-            put("password", password)
-            put("password_confirmation", passwordConfirmation)
+            put("password", pass)
+            put("password_confirmation", conf)
         }
 
-        val mediaType = "application/json".toMediaTypeOrNull()
-        val body = RequestBody.create(mediaType, jsonBody.toString())
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
 
-        val request = Request.Builder()
+        val req = Request.Builder()
             .url(url)
             .post(body)
             .addHeader("Accept", "application/json")
             .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val respString = response.body?.string()
-
-                if (response.isSuccessful) {
-                    val json = JSONObject(respString)
-                    val userId = json.getInt("user_id")
-                    Log.d("SignUp", "Registered user_id=$userId")
-
-                    requireActivity().runOnUiThread {
-                        val bundle = bundleOf(
-                            "user_id" to userId,
-                            "email" to email,
-                            "password" to password
-                        )
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.container, OtpVerificationFragment().apply { arguments = bundle })
-                            .addToBackStack(null)
-                            .commit()
-                    }
-                } else {
-
-                    Log.e("SignUp", "Error ${response.code}: $respString")
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_LONG).show()
-                    }
+        Log.e("RESPONSE BODY", "request: $req")
+        client.newCall(req).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    hideLoading()
+                    binding.errorTextView.text = "Сетевая ошибка"
+                    binding.errorTextView.visibility = View.VISIBLE
                 }
             }
 
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("SignUp", "Request failed: ${e.message}")
+            override fun onResponse(call: Call, response: Response) {
+                val resp = response.body?.string().orEmpty()
                 requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Network error", Toast.LENGTH_LONG).show()
+                    hideLoading()
+                    if (response.isSuccessful) {
+                        val j = JSONObject(resp)
+                        val token = j.optString("registration_token", null)
+                        if (token != null) {
+                            // передаём registration_token в следующий фрагмент
+                            parentFragmentManager.beginTransaction()
+                                .replace(
+                                    binding.root.id,
+                                    OtpVerificationFragment().apply {
+                                        arguments = bundleOf(
+                                            "registration_token" to token
+                                        )
+                                    }
+                                )
+                                .addToBackStack(null)
+                                .commit()
+                        } else {
+                            val err = j.optString("message", "Неизвестная ошибка")
+                            binding.errorTextView.text = err
+                            binding.errorTextView.visibility = View.VISIBLE
+                        }
+                    } else {
+                        val j = JSONObject(resp)
+                        val err = j.optString("message", j.optString("error", "Ошибка ${response.code}"))
+                        binding.errorTextView.text = err
+                        binding.errorTextView.visibility = View.VISIBLE
+                    }
                 }
             }
         })

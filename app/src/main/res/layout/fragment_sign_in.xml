@@ -114,29 +114,29 @@
 
         </RelativeLayout>
 
-
-        <CheckBox
-            android:id="@+id/rememberMeCheckBox"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Remember Me"
-            android:visibility="invisible"
+            android:textColor="#F44336"
             android:textSize="14sp"
-            android:textColor="@android:color/black"
+            android:text="@string/error"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/forgotPasswordTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="Forgot Password..."
             android:textSize="14sp"
             android:textColor="#F41F52"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/errorTextView" />
 
         <Button
             android:id="@+id/signInButton"
@@ -150,7 +150,7 @@
             android:textColor="@android:color/white"
             app:cornerRadius="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rememberMeCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/forgotPasswordTextView"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <LinearLayout

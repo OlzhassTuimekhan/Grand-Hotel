@@ -57,5 +57,6 @@
     <string name="open_map">Open Map</string>
     <string name="booking_now">Booking Now</string>
     <string name="_7_777_777_7777">+7 (777) 777-7777 </string>
+    <string name="error">ERROR</string>
 
 </resources>

@@ -10,7 +10,6 @@ class LoadingDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Применяем нашу тему
         setStyle(STYLE_NORMAL, R.style.Theme_TransparentFullScreenDialog)
     }
 

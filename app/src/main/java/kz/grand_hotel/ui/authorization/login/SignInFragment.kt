@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.transition.Visibility
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentSignInBinding
 import kz.grand_hotel.ui.GlobalData
@@ -88,6 +90,7 @@ class SignInFragment : Fragment() {
     }
 
     private fun login(email: String, password: String) {
+        binding.errorTextView.visibility = View.GONE
         showLoading()
 
         val url = "https://grand-hotel-production.up.railway.app/api/signin"
@@ -104,8 +107,13 @@ class SignInFragment : Fragment() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e("ERROR", "${e.message}")
                 requireActivity().runOnUiThread {
                     hideLoading()
+                    binding.errorTextView.apply {
+                        text = "Network error..."
+                        visibility = View.VISIBLE
+                    }
                     Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -127,6 +135,10 @@ class SignInFragment : Fragment() {
                     }
                 } else {
                     requireActivity().runOnUiThread {
+                        binding.errorTextView.apply {
+                            text = JSONObject(bodyString).optString("error", "Login failed")
+                            visibility = View.VISIBLE
+                        }
                         Toast.makeText(requireContext(), "Login failed: ${response.code}", Toast.LENGTH_SHORT).show()
                     }
                 }
