@@ -13,6 +13,10 @@
         <action
             android:id="@+id/action_navigation_home_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_hotelDetailsFragment"
+            app:destination="@id/hotelDetailsFragment" />
+
     </fragment>
 
     <fragment
@@ -20,6 +24,12 @@
         android:name="kz.grand_hotel.ui.menu.ui.home.MapFragment"
         android:label="Map"
         tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/hotelDetailsFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.HotelDetailsFragment"
+        android:label="Detail"
+        tools:layout="@layout/fragment_hotel_details" />
 
     <fragment
         android:id="@+id/navigation_my_booking"

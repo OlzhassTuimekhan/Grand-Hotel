@@ -10,16 +10,22 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
 
-class PropertyAdapter : ListAdapter<Property, PropertyAdapter.PropertyViewHolder>(PropertyDiffCallback()) {
+class PropertyAdapter(
+    private val onItemClick: (Property) -> Unit
+) : ListAdapter<Property, PropertyAdapter.PropertyViewHolder>(PropertyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_popular, parent, false)
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_popular, parent, false)
         return PropertyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
-        val currentProperty = getItem(position)
-        holder.bind(currentProperty)
+        val property = getItem(position)
+        holder.bind(property)
+        holder.itemView.setOnClickListener {
+            onItemClick(property)
+        }
     }
 
     class PropertyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,12 +45,10 @@ class PropertyAdapter : ListAdapter<Property, PropertyAdapter.PropertyViewHolder
     }
 
     class PropertyDiffCallback : DiffUtil.ItemCallback<Property>() {
-        override fun areItemsTheSame(oldItem: Property, newItem: Property): Boolean {
-            return oldItem.name == newItem.name
-        }
+        override fun areItemsTheSame(oldItem: Property, newItem: Property) =
+            oldItem.name == newItem.name
 
-        override fun areContentsTheSame(oldItem: Property, newItem: Property): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Property, newItem: Property) =
+            oldItem == newItem
     }
 }

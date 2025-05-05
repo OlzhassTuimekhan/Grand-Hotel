@@ -25,9 +25,9 @@ class HomeViewModel : ViewModel() {
     private fun loadProperties() {
 
         val propertiesList = listOf(
-            Property(R.drawable.ic_onboarding1, "The Horizon Retreat", "Los Angeles, CA", "$480/night", "4.5"),
-            Property(R.drawable.ic_onboarding2, "The Horizon Retreat", "Los Angeles, CA", "$480/night", "4.5"),
-            Property(R.drawable.ic_onboarding3, "The Horizon Retreat", "Los Angeles, CA", "$480/night", "4.5"),)
+            Property(1, R.drawable.ic_onboarding1, "Kazakhstan Hotel", "Almaty, KZ", "$480/night", "4.5"),
+            Property(2, R.drawable.ic_onboarding2, "Almaty Hotel", "Almaty, KZ", "$250/night", "4.5"),
+            Property(3, R.drawable.ic_onboarding3, "Novotel", "Almaty, KZ", "$310/night", "4.5"),)
 
         val hotelsList = listOf(
             HotelsInMap("Novotel", LatLng(43.242284, 76.9575585), 4.7, "$320/night", R.drawable.ic_hotel1),
@@ -38,8 +38,8 @@ class HomeViewModel : ViewModel() {
         _hotels.value = hotelsList
         _properties.value = propertiesList
         _recommendedProperties.value = listOf(
-            Property(R.drawable.ic_onboarding1,"Ocean Breeze Resort", "Miami, FL", "$480/night", "4.5"),
-            Property(R.drawable.ic_onboarding2,"The Horizon Retreat", "Denver, CO", "$480/night", "4.2"),
+            Property(1, R.drawable.ic_onboarding1,"Ocean Breeze Resort", "Miami, FL", "$480/night", "4.5"),
+            Property(2, R.drawable.ic_onboarding2,"The Horizon Retreat", "Denver, CO", "$480/night", "4.2"),
         )
 
 

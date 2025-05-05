@@ -1,6 +1,7 @@
 package kz.grand_hotel.ui.menu.ui.home
 
 data class Property(
+    val id: Int,
     val imageResId: Int,
     val name: String,
     val location: String,

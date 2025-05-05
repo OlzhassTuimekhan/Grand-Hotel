@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -18,40 +17,64 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var propertyAdapter: PropertyAdapter
-    private lateinit var recommendedAdapter: RecommendedAdapter
 
+    private val propertyAdapter by lazy {
+        PropertyAdapter { property ->
+            val bundle = Bundle().apply {
+                putInt   ("imageResId", property.imageResId)
+                putString("name",       property.name)
+                putString("location",   property.location)
+                putString("price",      property.price)
+                putString("rating",     property.rating)
+            }
+            findNavController().navigate(
+                R.id.action_navigation_home_to_hotelDetailsFragment
+                , bundle
+            )
+        }
+    }
+    private val recommendedAdapter by lazy {
+        RecommendedAdapter { property ->
+            val bundle = Bundle().apply {
+                putInt   ("imageResId", property.imageResId)
+                putString("name",       property.name)
+                putString("location",   property.location)
+                putString("price",      property.price)
+                putString("rating",     property.rating)
+            }
+            findNavController().navigate(
+                R.id.action_navigation_home_to_hotelDetailsFragment,
+                bundle
+            )
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        propertyAdapter = PropertyAdapter()
-        recommendedAdapter = RecommendedAdapter()
+        binding.recyclerViewMostPopular.apply {
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+            adapter = propertyAdapter
+        }
 
-
-        binding.recyclerViewMostPopular.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-        binding.recyclerViewMostPopular.adapter = propertyAdapter
-
-        binding.recyclerViewRecommended.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.recyclerViewRecommended.adapter = recommendedAdapter
+        binding.recyclerViewRecommended.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = recommendedAdapter
+        }
 
         homeViewModel.properties.observe(viewLifecycleOwner) { properties ->
             propertyAdapter.submitList(properties)
         }
-
         homeViewModel.recommendedProperties.observe(viewLifecycleOwner) { recommendedProperties ->
             recommendedAdapter.submitList(recommendedProperties)
         }
