@@ -14,6 +14,8 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
+import kz.grand_hotel.utils.hideLoading
+import kz.grand_hotel.utils.showLoading
 
 class ForgotFragment : Fragment() {
 
@@ -51,6 +53,7 @@ class ForgotFragment : Fragment() {
     }
 
     private fun sendOtp(email: String) {
+        showLoading()
         val url = "${GlobalData.ip}send-otp"
         val jsonBody = JSONObject().apply {
             put("email", email)
@@ -71,6 +74,7 @@ class ForgotFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show()
                 }
+                hideLoading()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -80,7 +84,9 @@ class ForgotFragment : Fragment() {
                         Toast.makeText(requireContext(), "OTP sent to your email", Toast.LENGTH_SHORT).show()
                         val bundle = Bundle().apply {
                             putString("email", email)
+                            putInt("user_id", JSONObject(respString).optInt("user_id", 0))
                         }
+                        hideLoading()
                         parentFragmentManager.beginTransaction()
                             .replace(R.id.container, OtpResetFragment().apply { arguments = bundle })
                             .addToBackStack(null)
@@ -88,6 +94,7 @@ class ForgotFragment : Fragment() {
                     }
                 } else {
                     Log.e("ForgotFragment", "Error ${response.code}: $respString")
+                    hideLoading()
                     requireActivity().runOnUiThread {
                         Toast.makeText(requireContext(), "Failed to send OTP", Toast.LENGTH_SHORT).show()
                     }

@@ -5,104 +5,180 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentCreateNewPasswordBinding
-import kz.grand_hotel.databinding.FragmentSignInBinding
+import kz.grand_hotel.ui.GlobalData
 import kz.grand_hotel.ui.authorization.login.SignInFragment
-
+import kz.grand_hotel.utils.showLoading
+import kz.grand_hotel.utils.hideLoading
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import org.json.JSONObject
+import java.io.IOException
 
 class CreateNewPasswordFragment : Fragment() {
 
     private var _binding: FragmentCreateNewPasswordBinding? = null
     private val binding get() = _binding!!
-    private var isPasswordVisible = false
 
+    private var isPasswordVisible = false
+    private val client = OkHttpClient()
+
+
+    private var email: String = ""
+    private var resetToken: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        arguments?.let {
+            email = it.getString("email", "")
+            resetToken = it.getString("reset_token", "")
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCreateNewPasswordBinding.inflate(inflater, container, false)
-        return binding.root    }
+        return binding.root
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+
             backButton.setOnClickListener {
-                activity?.supportFragmentManager?.popBackStack()
-            }
-            nextButton.setOnClickListener {
-                val password = binding.newPasswordEditText.text.toString()
-                val confirm = binding.confirmPasswordEditText.text.toString()
-                val email = arguments?.getString("email")
-
-                if (password.isEmpty()) {
-                    binding.newPasswordEditText.error = "Please enter a password"
-                    return@setOnClickListener
-                }
-                if (confirm.isEmpty()) {
-                    binding.confirmPasswordEditText.error = "Please confirm the password"
-                    return@setOnClickListener
-                }
-                if (password != confirm) {
-                    binding.confirmPasswordEditText.error = "Passwords do not match"
-                    return@setOnClickListener
-                }
-//                resetPassword(email, password)
-                val builder = AlertDialog.Builder(requireContext())
-                val dialogView = LayoutInflater.from(requireContext())
-                    .inflate(R.layout.dialog_password_reset_success, null)
-                builder.setView(dialogView)
-                val dialog = builder.create()
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                dialog.setCancelable(false)
-
-                val continueButton = dialogView.findViewById<Button>(R.id.continueButton1)
-                continueButton.setOnClickListener {
-                    dialog.dismiss()
-                    val signInFragment = SignInFragment()
-                    activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.container, signInFragment)
-                        ?.addToBackStack(null)
-                        ?.commit()
-                }
-
-                dialog.show()
+                parentFragmentManager.popBackStack()
             }
 
             newPasswordVisibilityButton.setOnClickListener {
                 isPasswordVisible = !isPasswordVisible
                 togglePasswordVisibility(
-                    binding.newPasswordEditText,
-                    binding.newPasswordVisibilityButton,
+                    newPasswordEditText,
+                    newPasswordVisibilityButton,
                     isPasswordVisible
                 )
             }
-
             confirmPasswordVisibilityButton.setOnClickListener {
                 isPasswordVisible = !isPasswordVisible
                 togglePasswordVisibility(
-                    binding.confirmPasswordEditText,
-                    binding.confirmPasswordVisibilityButton,
+                    confirmPasswordEditText,
+                    confirmPasswordVisibilityButton,
                     isPasswordVisible
                 )
             }
 
+            nextButton.setOnClickListener {
+
+                errorTextView.visibility = View.GONE
+
+                val newPass = newPasswordEditText.text.toString()
+                val confPass = confirmPasswordEditText.text.toString()
+
+
+                when {
+                    newPass.isEmpty() -> {
+                        newPasswordEditText.error = "Введите новый пароль"
+                        return@setOnClickListener
+                    }
+                    confPass.isEmpty() -> {
+                        confirmPasswordEditText.error = "Подтвердите пароль"
+                        return@setOnClickListener
+                    }
+                    newPass != confPass -> {
+                        confirmPasswordEditText.error = "Пароли не совпадают"
+                        return@setOnClickListener
+                    }
+                }
+
+                resetPassword(newPass, confPass)
+            }
         }
+    }
+
+    private fun resetPassword(newPass: String, confPass: String) {
+        showLoading()
+        binding.errorTextView.visibility = View.GONE
+
+        val url = "${GlobalData.ip}reset-password"
+        val json = JSONObject().apply {
+            put("email", email)
+            put("reset_token", resetToken)
+            put("new_password", newPass)
+            put("new_password_confirmation", confPass)
+        }
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .addHeader("Accept", "application/json")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    hideLoading()
+                    Toast.makeText(requireContext(), "Сетевая ошибка", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val respString = response.body?.string().orEmpty()
+                requireActivity().runOnUiThread {
+                    hideLoading()
+                    when (response.code) {
+                        200 -> {
+
+                            val builder = AlertDialog.Builder(requireContext())
+                            val dialogView = layoutInflater.inflate(
+                                R.layout.dialog_password_reset_success,
+                                null
+                            )
+                            builder.setView(dialogView)
+                            val dialog = builder.create().apply {
+                                window?.setBackgroundDrawableResource(android.R.color.transparent)
+                                setCancelable(false)
+                            }
+                            dialogView.findViewById<View>(R.id.continueButton1).setOnClickListener {
+                                dialog.dismiss()
+
+                                parentFragmentManager.beginTransaction()
+                                    .replace(R.id.container, SignInFragment())
+                                    .commit()
+                            }
+                            dialog.show()
+                        }
+                        400, 404 -> {
+
+                            val msg = JSONObject(respString)
+                                .optString("message", "Ошибка. Попробуйте ещё раз")
+                            binding.errorTextView.text = msg
+                            binding.errorTextView.visibility = View.VISIBLE
+                        }
+                        else -> {
+                            Toast.makeText(
+                                requireContext(),
+                                "Ошибка ${response.code}: ${response.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun togglePasswordVisibility(
@@ -112,11 +188,16 @@ class CreateNewPasswordFragment : Fragment() {
     ) {
         if (isVisible) {
             editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
-            icon.setImageResource(R.drawable.ic_eye_on) // иконка «глаз открыт»
+            icon.setImageResource(R.drawable.ic_eye_on)
         } else {
             editText.transformationMethod = PasswordTransformationMethod.getInstance()
-            icon.setImageResource(R.drawable.ic_eye_off) // иконка «глаз закрыт»
+            icon.setImageResource(R.drawable.ic_eye_off)
         }
         editText.setSelection(editText.text.length)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
