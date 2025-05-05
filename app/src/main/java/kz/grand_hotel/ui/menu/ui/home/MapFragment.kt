@@ -34,6 +34,8 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import kz.grand_hotel.databinding.FragmentHomeBinding
+import kz.grand_hotel.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -41,6 +43,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var googleMap: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var homeViewModel: HomeViewModel
+    private var _binding: FragmentMapBinding? = null
+    private val binding get() = _binding!!
 
 
 
@@ -49,14 +53,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_map, container, false)
-        mapView = view.findViewById(R.id.mapView)
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
+        mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        return view
+        return binding.root
     }
 
     override fun onResume() {
@@ -88,13 +92,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         googleMap = map
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
+        binding.backButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             googleMap?.isMyLocationEnabled = true
-
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val userLocation = LatLng(location.latitude, location.longitude)
