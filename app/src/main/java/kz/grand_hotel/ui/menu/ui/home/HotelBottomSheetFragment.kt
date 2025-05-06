@@ -68,7 +68,7 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
             .into(binding.hotelImageView)
 
         binding.bookingButton.setOnClickListener {
-            // например, открыть фрагмент деталей
+
             val bundle = Bundle().apply {
                 putInt   ("imageResId", hotel.image)
                 putString("name",       hotel.name)
@@ -77,7 +77,7 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
                 putString("rating",     hotel.rating)
             }
             findNavController().navigate(
-                R.id.action_navigation_home_to_hotelDetailsFragment,
+                R.id.action_mapFragment_to_hotelDetailsFragment,
                 bundle
             )
             dismiss()
