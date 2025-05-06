@@ -82,6 +82,10 @@ class HomeFragment : Fragment() {
         binding.hotelNearYou.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_mapFragment)
         }
+
+        binding.searchImageView.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
+        }
     }
 
     override fun onDestroyView() {
