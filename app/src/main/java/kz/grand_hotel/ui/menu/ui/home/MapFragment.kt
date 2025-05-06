@@ -1,6 +1,7 @@
 package kz.grand_hotel.ui.menu.ui.home
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -33,6 +34,7 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentMapBinding
@@ -45,6 +47,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+    private var userLocation: LatLng? = null
 
 
 
@@ -61,6 +64,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
     }
 
     override fun onResume() {
@@ -90,50 +100,79 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        binding.backButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        // Настроим поиск
+        setupSearch()
+
+        // Проверим разрешения
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            googleMap?.isMyLocationEnabled = true
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                if (location != null) {
-                    val userLocation = LatLng(location.latitude, location.longitude)
-
-                    googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
-
-                    addUserMarker(userLocation)
-
-                    homeViewModel.hotels.observe(viewLifecycleOwner) { hotels ->
-                        addHotelMarkers(hotels)
-                        googleMap?.setOnMarkerClickListener { marker ->
-                            val hotelName = marker.title
-                            val hotelLocation = marker.position
-
-                            // Find the matching hotel from your list (you can use a unique identifier, e.g., hotel name)
-                            val hotel = hotels.find { it.name == hotelName }
-
-                            // If the hotel is found, show the bottom sheet
-                            hotel?.let {
-                                val bottomSheetFragment = HotelBottomSheetFragment(it)
-                                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
-                            }
-
-                            true
-                        }
-                    }
-                }
-            }
+            googleMap!!.isMyLocationEnabled = true
+            loadUserLocationAndMarkers()
         } else {
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 1
+            )
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun loadUserLocationAndMarkers() {
+        val fused = com.google.android.gms.location.LocationServices
+            .getFusedLocationProviderClient(requireContext())
+
+        fused.lastLocation.addOnSuccessListener { loc: Location? ->
+            loc?.let {
+                userLocation = LatLng(it.latitude, it.longitude)
+
+                // *** Сразу центрируем камеру на моей точке ***
+                googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!, 15f))
+
+                // рисуем собственный маркер
+                addUserMarker(userLocation!!)
+
+                // и сразу показываем все отели
+                homeViewModel.hotels.observe(viewLifecycleOwner) { hotels ->
+                    addHotelMarkers(hotels)
+                }
+            }
+        }
+    }
+
+    private fun setupSearch() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                filterHotels(query)
+                return true
+            }
+            override fun onQueryTextChange(newText: String): Boolean {
+                filterHotels(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterHotels(query: String) {
+        googleMap?.clear()
+        userLocation?.let { addUserMarker(it) }
+
+        val filtered = homeViewModel.hotels.value
+            ?.filter { it.name.contains(query, ignoreCase = true) }
+            .orEmpty()
+
+        addHotelMarkers(filtered)
+
+        if (filtered.isNotEmpty()) {
+            val target = filtered.first().location
+            googleMap?.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(target, 15f),
+                500,
+                null
             )
         }
     }
@@ -175,7 +214,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
-            // Draw white circle background
             val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
             backgroundPaint.color = Color.BLUE
             canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), (width / 2).toFloat(), backgroundPaint)
