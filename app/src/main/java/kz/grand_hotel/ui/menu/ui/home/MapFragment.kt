@@ -102,6 +102,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         setupSearch()
 
+        homeViewModel.hotels.observe(viewLifecycleOwner) { hotels ->
+            addHotelMarkers(hotels)
+
+            googleMap?.setOnMarkerClickListener { marker ->
+                val hotel = hotels.find { it.name == marker.title }
+                hotel?.let {
+                    HotelBottomSheetFragment
+                        .newInstance(it)
+                        .show(parentFragmentManager, null)
+                }
+                true
+            }
+        }
+
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -165,7 +179,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         addHotelMarkers(filtered)
 
         if (filtered.isNotEmpty()) {
-            val target = filtered.first().location
+            val target = filtered.first().locationLatLng
             googleMap?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(target, 15f),
                 500,
@@ -286,7 +300,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val icon = BitmapDescriptorFactory.fromBitmap(bitmap)
             googleMap?.addMarker(
                 MarkerOptions()
-                    .position(hotel.location)
+                    .position(hotel.locationLatLng)
                     .title(hotel.name)
                     .icon(icon)
             )

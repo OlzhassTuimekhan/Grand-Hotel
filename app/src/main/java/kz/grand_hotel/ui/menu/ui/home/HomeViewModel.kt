@@ -30,9 +30,9 @@ class HomeViewModel : ViewModel() {
             Property(3, R.drawable.ic_onboarding3, "Novotel", "Almaty, KZ", "$310/night", "4.5"),)
 
         val hotelsList = listOf(
-            HotelsInMap("Novotel", LatLng(43.242284, 76.9575585), 4.7, "$320/night", R.drawable.ic_hotel1),
-            HotelsInMap("hotel 'Almaty'", LatLng(43.2500694, 76.9270366), 4.5, "$280/night", R.drawable.ic_hotel2),
-            HotelsInMap("Hotel 'Kazakhstan'", LatLng(43.2454565, 76.9423474), 4.0, "$250/night", R.drawable.ic_hotel3)
+            HotelsInMap(1, "Novotel", "Almaty, KZ", LatLng(43.242284, 76.9575585), "4.7", "$320/night", R.drawable.ic_hotel1),
+            HotelsInMap(2, "hotel 'Almaty'", "Almaty, KZ", LatLng(43.2500694, 76.9270366), "4.5", "$280/night", R.drawable.ic_hotel2),
+            HotelsInMap(2, "Hotel 'Kazakhstan'", "Almaty, KZ", LatLng(43.2454565, 76.9423474), "4.0", "$250/night", R.drawable.ic_hotel3)
         )
 
         _hotels.value = hotelsList

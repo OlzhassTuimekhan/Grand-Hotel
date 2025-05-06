@@ -4,27 +4,93 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.gson.Gson
 import kz.grand_hotel.R
+import kz.grand_hotel.databinding.FragmentBottomSheetHotelBinding
+import kz.grand_hotel.ui.menu.ui.HotelDetailsFragment
 
-class HotelBottomSheetFragment(private val hotel: HotelsInMap) : BottomSheetDialogFragment() {
+class HotelBottomSheetFragment : BottomSheetDialogFragment() {
+
+    private var _binding: FragmentBottomSheetHotelBinding? = null
+    private val binding get() = _binding!!
+
+    override fun getTheme(): Int = R.style.RoundedBottomSheetDialogTheme
+
+    companion object {
+        private const val ARG_HOTEL = "arg_hotel"
+
+        fun newInstance(hotel: HotelsInMap): HotelBottomSheetFragment {
+            val json = Gson().toJson(hotel)
+            return HotelBottomSheetFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_HOTEL, json)
+                }
+            }
+        }
+    }
+
+    private lateinit var hotel: HotelsInMap
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getString(ARG_HOTEL)?.let { json ->
+            hotel = Gson().fromJson(json, HotelsInMap::class.java)
+        } ?: run {
+            dismiss()
+        }
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        _binding = FragmentBottomSheetHotelBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        val view = inflater.inflate(R.layout.fragment_bottom_sheet_hotel, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val hotelNameTextView: TextView = view.findViewById(R.id.hotelNameTextView)
-        val hotelRatingTextView: TextView = view.findViewById(R.id.hotelRatingTextView)
-        val hotelPriceTextView: TextView = view.findViewById(R.id.hotelPriceTextView)
+        // Подставляем данные
+        binding.hotelNameTextView.text     = hotel.name
+        binding.hotelLocationTextView.text = ""  // если у вас есть поле location
+        binding.hotelPriceTextView.text    = hotel.price
+        binding.hotelRatingTextView.text   = hotel.rating
 
-        hotelNameTextView.text = hotel.name
-        hotelRatingTextView.text = "Rating: ${hotel.rating}"
-        hotelPriceTextView.text = hotel.price
+        // Загружаем картинку Glide-ом
+        Glide.with(this)
+            .load(hotel.image)
+            .centerCrop()
+            .into(binding.hotelImageView)
 
-        return view
+        binding.bookingButton.setOnClickListener {
+            // например, открыть фрагмент деталей
+            val bundle = Bundle().apply {
+                putInt   ("imageResId", hotel.image)
+                putString("name",       hotel.name)
+                putString("location",   hotel.location)
+                putString("price",      hotel.price)
+                putString("rating",     hotel.rating)
+            }
+            findNavController().navigate(
+                R.id.action_navigation_home_to_hotelDetailsFragment,
+                bundle
+            )
+            dismiss()
+        }
+
+        binding.chatButton.setOnClickListener {
+            // ваш код для чата
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // не забываем отчищать binding
+        _binding = null
     }
 }

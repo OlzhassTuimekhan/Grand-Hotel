@@ -3,10 +3,12 @@ package kz.grand_hotel.ui.menu.ui.home
 import com.google.android.gms.maps.model.LatLng
 
 data class HotelsInMap (
+    val id: Int,
     val name: String,
-    val location: LatLng,
-    val rating: Double,
+    val location: String,
+    val locationLatLng: LatLng,
+    val rating: String,
     val price: String,
     val image: Int
-
 )
+
