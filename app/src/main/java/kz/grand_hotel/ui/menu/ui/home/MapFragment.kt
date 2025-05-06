@@ -32,12 +32,11 @@ import android.graphics.Rect
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.Drawable
-import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
-import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentMapBinding
+import android.graphics.Path
+import android.graphics.RectF
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -101,10 +100,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
 
-        // Настроим поиск
         setupSearch()
 
-        // Проверим разрешения
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -209,49 +206,84 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun addHotelMarkers(hotels: List<HotelsInMap>) {
         hotels.forEach { hotel ->
-            val height = 160
-            val width = 160
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val markerWidth = 200
+            val markerHeight = 240
+
+            val strokeWidth = 8f
+
+            val radius = (markerWidth / 2f) - strokeWidth
+            val centerX = markerWidth / 2f
+            val centerY = markerWidth / 2f
+
+            val bitmap = Bitmap.createBitmap(markerWidth, markerHeight, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
-            val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            backgroundPaint.color = Color.BLUE
-            canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), (width / 2).toFloat(), backgroundPaint)
-
-            try {
-                val hotelDrawable = ContextCompat.getDrawable(requireContext(), hotel.image)
-                if (hotelDrawable != null) {
-                    val imageSize = 80f
-                    val imageX = (width - imageSize) / 2f
-                    val imageY = (height - 90f) / 2f // Adjust vertical positioning
-                    drawCircularImage(canvas, hotelDrawable, imageX, imageY, imageSize)
-                } else {
-                    Log.e("MapFragment", "Drawable resource not found: ${hotel.image}")
-                }
-            } catch (e: Exception) {
-                Log.e("MapFragment", "Error loading drawable: ${e.message}")
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                style = Paint.Style.FILL
+            }.let { paint ->
+                canvas.drawCircle(centerX, centerY, radius + strokeWidth, paint)
             }
 
-            // Draw yellow circle for rating
-            val ratingCircleRadius = 28f
-            val ratingCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            ratingCirclePaint.color = ContextCompat.getColor(requireContext(), R.color.yellow)
-            canvas.drawCircle((width / 2).toFloat(), height - ratingCircleRadius - 10f, ratingCircleRadius, ratingCirclePaint)
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = ContextCompat.getColor(requireContext(), R.color.blue)
+                style = Paint.Style.STROKE
+                this.strokeWidth = strokeWidth
+            }.let { paint ->
+                canvas.drawCircle(centerX, centerY, radius, paint)
+            }
 
-            // Draw rating text
-            val ratingTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            ratingTextPaint.color = Color.BLACK
-            ratingTextPaint.textSize = 20f
-            ratingTextPaint.typeface = ResourcesCompat.getFont(requireContext(), R.font.jost_semibold)
-            val ratingText = hotel.rating.toString()
-            val ratingBounds = Rect()
-            ratingTextPaint.getTextBounds(ratingText, 0, ratingText.length, ratingBounds)
-            val ratingX = (width / 2 - ratingBounds.width() / 2).toFloat()
-            val ratingY = height - ratingCircleRadius - 10f + (ratingBounds.height() / 2).toFloat()
-            canvas.drawText(ratingText, ratingX, ratingY, ratingTextPaint)
+            val saveCount = canvas.save()
+            val clipPath = Path().apply {
+                addCircle(centerX, centerY, radius - strokeWidth/2f, Path.Direction.CCW)
+            }
+            canvas.clipPath(clipPath)
+            ContextCompat.getDrawable(requireContext(), hotel.image)?.apply {
+                setBounds(
+                    (centerX - radius).toInt(),
+                    (centerY - radius).toInt(),
+                    (centerX + radius).toInt(),
+                    (centerY + radius).toInt()
+                )
+                draw(canvas)
+            }
+            canvas.restoreToCount(saveCount)
 
-            val icon: BitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap)
+            val pillWidth  = 120f
+            val pillHeight =  50f
+            val pillLeft = centerX - pillWidth/2f
+            val pillTop  = centerY + radius - pillHeight/2f
+            val pillRect = RectF(pillLeft, pillTop, pillLeft + pillWidth, pillTop + pillHeight)
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                style = Paint.Style.FILL
+            }.let { paint ->
+                canvas.drawRoundRect(pillRect, pillHeight/2f, pillHeight/2f, paint)
+            }
 
+            val starDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_star)
+            val starSize = pillHeight * 0.6f
+            val starLeft = pillLeft + 8f
+            val starTop  = pillTop + (pillHeight - starSize)/2f
+            starDrawable?.setBounds(
+                starLeft.toInt(),
+                starTop.toInt(),
+                (starLeft + starSize).toInt(),
+                (starTop + starSize).toInt()
+            )
+            starDrawable?.draw(canvas)
+
+            val text = hotel.rating.toString()
+            val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.BLACK
+                textSize = pillHeight * 0.5f
+                typeface = ResourcesCompat.getFont(requireContext(), R.font.jost_semibold)
+            }
+            val textX = starLeft + starSize + 8f
+            val textY = pillTop + pillHeight/2f - (textPaint.descent() + textPaint.ascent())/2f
+            canvas.drawText(text, textX, textY, textPaint)
+
+            val icon = BitmapDescriptorFactory.fromBitmap(bitmap)
             googleMap?.addMarker(
                 MarkerOptions()
                     .position(hotel.location)
