@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -66,8 +67,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:text="The Aston Vill Hotel"
                 android:fontFamily="@font/jost_bold"
+                android:textColor="@color/blue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -126,6 +127,7 @@
                 android:text="Common Facilities"
                 android:fontFamily="@font/jost_medium"
                 android:textSize="16sp"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
 
@@ -134,18 +136,100 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp">
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/seeAllFacilitiesTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="See All"
-                android:fontFamily="@font/jost_medium"
-                android:textSize="14sp"
-                android:textColor="#1E88E5"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="end" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_common_1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Ac"
+                        android:fontFamily="@font/jost_regular"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_common_2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Restaurant"
+                        android:fontFamily="@font/jost_regular"
+                        android:textSize="14sp"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_common_3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Swimming Pool"
+                        android:fontFamily="@font/jost_regular"
+                        android:textSize="14sp"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_common_4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="24-Hours&#160;Front&#160;Desk"
+                        android:fontFamily="@font/jost_regular"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:maxLines="2"/>
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -153,6 +237,7 @@
                 android:text="Description"
                 android:fontFamily="@font/jost_semibold"
                 android:textSize="16sp"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
 
@@ -165,12 +250,11 @@
                 android:textSize="14sp"
                 android:layout_marginTop="8dp" />
 
-
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location"
+                android:textColor="@color/black"
                 android:fontFamily="@font/jost_semibold"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -184,7 +268,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:background="#F0F0F0"
-                    android:src="@drawable/map_placeholder"
+                    android:src="@drawable/map_placeholder_1"
                     android:scaleType="centerCrop" />
                 <TextView
                     android:id="@+id/openMapTextView"
@@ -196,6 +280,12 @@
                     android:textColor="#1E88E5"
                     android:layout_gravity="end|bottom"
                     android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="android:layout_marginTop=&quot;8dp&quot;&#xA;                android:paddingStart=&quot;16dp&quot;&#xA;                android:paddingEnd=&quot;16dp&quot;" />
             </FrameLayout>
 
             <TextView
@@ -208,34 +298,63 @@
                 android:textColor="#757575"
                 android:layout_marginTop="8dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reviews"
-                android:fontFamily="@font/jost_semibold"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp">
 
-            <TextView
-                android:id="@+id/seeAllReviewsTextView"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reviews"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/seeAllReviewsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See All"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textSize="14sp"
+                    android:textColor="#1E88E5" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reviewsRecyclerView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="See All"
-                android:fontFamily="@font/jost_semibold"
-                android:textSize="14sp"
-                android:textColor="#1E88E5"
                 android:layout_marginTop="8dp"
-                android:layout_gravity="end" />
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                tools:listitem="@layout/item_review" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recommendation"
+                android:textColor="@color/black"
                 android:fontFamily="@font/jost_semibold"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewRecommended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                tools:listitem="@layout/item_recommended" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -261,7 +380,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="80dp" /> </LinearLayout>
+                android:layout_height="80dp" />
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

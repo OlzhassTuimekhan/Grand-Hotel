@@ -17,6 +17,8 @@ class HomeViewModel : ViewModel() {
     private val _hotels = MutableLiveData<List<HotelsInMap>>()
     val hotels: LiveData<List<HotelsInMap>> = _hotels
 
+    private val _reviews = MutableLiveData<List<Review>>()
+    val reviews: LiveData<List<Review>> = _reviews
 
     init {
         loadProperties()
@@ -42,6 +44,20 @@ class HomeViewModel : ViewModel() {
             Property(2, R.drawable.ic_onboarding2,"The Horizon Retreat", "Denver, CO", "$480/night", "4.2"),
         )
 
+        _reviews.value = listOf(
+            Review(
+                avatarResId = R.drawable.,
+                authorName  = "Kim Borrdy",
+                rating      = 4.5f,
+                comment     = "Amazing! The room is better than the picture. Thanks for amazing experience!"
+            ),
+            Review(
+                avatarResId = R.drawable.avatar_2,
+                authorName  = "Mirai Kamazuki",
+                rating      = 5.0f,
+                comment     = "The service is on point, and I really like the facilities. Good job!"
+            )
+        )
 
     }
 

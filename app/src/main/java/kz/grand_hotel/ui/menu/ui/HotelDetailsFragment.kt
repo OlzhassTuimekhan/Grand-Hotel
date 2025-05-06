@@ -6,16 +6,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentHotelDetailsBinding
+import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
+import kz.grand_hotel.ui.menu.ui.home.RecommendedAdapter
 
 
 class HotelDetailsFragment : Fragment() {
 
     private var _binding: FragmentHotelDetailsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var homeViewModel: HomeViewModel
 
+    private val recommendedAdapter by lazy {
+        RecommendedAdapter { property ->
+            val bundle = Bundle().apply {
+                putInt   ("imageResId", property.imageResId)
+                putString("name",       property.name)
+                putString("location",   property.location)
+                putString("price",      property.price)
+                putString("rating",     property.rating)
+            }
+            findNavController().navigate(
+                R.id.action_hotelDetailsFragment_self,
+                bundle
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +57,8 @@ class HotelDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
         val args = requireArguments()
         val imageResId = args.getInt("imageResId")
         val name       = args.getString("name")
@@ -49,9 +72,21 @@ class HotelDetailsFragment : Fragment() {
         binding.priceBottomTextView.text     = price
         binding.hotelRatingTextView.text     = rating
 
+        binding.recyclerViewRecommended.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = recommendedAdapter
+        }
+
+        homeViewModel.recommendedProperties.observe(viewLifecycleOwner) { recommendedProperties ->
+            recommendedAdapter.submitList(recommendedProperties)
+        }
+
+
         binding.backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
+
+
 
     }
 

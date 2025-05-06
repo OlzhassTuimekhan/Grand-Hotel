@@ -208,7 +208,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="12dp"
                 android:paddingBottom="8dp"
-                tools:listitem="@layout/item_popular" />
+                tools:listitem="@layout/item_recommended" />
         </LinearLayout>
 
         <LinearLayout

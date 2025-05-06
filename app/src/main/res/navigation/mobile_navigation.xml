@@ -36,7 +36,11 @@
         android:id="@+id/hotelDetailsFragment"
         android:name="kz.grand_hotel.ui.menu.ui.HotelDetailsFragment"
         android:label="Detail"
-        tools:layout="@layout/fragment_hotel_details" />
+        tools:layout="@layout/fragment_hotel_details" >
+        <action
+            android:id="@+id/action_hotelDetailsFragment_self"
+            app:destination="@id/hotelDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
