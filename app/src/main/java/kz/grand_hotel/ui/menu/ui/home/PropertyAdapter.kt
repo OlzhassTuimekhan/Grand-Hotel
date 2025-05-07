@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
 
 class PropertyAdapter(
-    private val onItemClick: (Property) -> Unit
-) : ListAdapter<Property, PropertyAdapter.PropertyViewHolder>(PropertyDiffCallback()) {
+    private val onItemClick: (Hotels) -> Unit
+) : ListAdapter<Hotels, PropertyAdapter.PropertyViewHolder>(PropertyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -35,8 +35,8 @@ class PropertyAdapter(
         private val priceTextView: TextView = itemView.findViewById(R.id.propertyPriceTextView)
         private val ratingTextView: TextView = itemView.findViewById(R.id.propertyRatingTextView)
 
-        fun bind(property: Property) {
-            imageView.setImageResource(property.imageResId)
+        fun bind(property: Hotels) {
+            imageView.setImageResource(property.image)
             nameTextView.text = property.name
             locationTextView.text = property.location
             priceTextView.text = property.price
@@ -44,11 +44,15 @@ class PropertyAdapter(
         }
     }
 
-    class PropertyDiffCallback : DiffUtil.ItemCallback<Property>() {
-        override fun areItemsTheSame(oldItem: Property, newItem: Property) =
+    class PropertyDiffCallback : DiffUtil.ItemCallback<Hotels>() {
+        override fun areItemsTheSame(oldItem: Hotels, newItem: Hotels) =
             oldItem.name == newItem.name
 
-        override fun areContentsTheSame(oldItem: Property, newItem: Property) =
+        override fun areContentsTheSame(oldItem: Hotels, newItem: Hotels) =
             oldItem == newItem
+    }
+
+    override fun getItemCount(): Int {
+        return minOf(super.getItemCount(), 3)
     }
 }

@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.databinding.ItemRecommendedBinding
 
 class RecommendedAdapter(
-    private val onItemClick: (Property) -> Unit
-) : ListAdapter<Property, RecommendedAdapter.PropertyViewHolder>(PropertyDiffCallback()) {
+    private val onItemClick: (Hotels) -> Unit
+) : ListAdapter<Hotels, RecommendedAdapter.PropertyViewHolder>(PropertyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder {
         val binding = ItemRecommendedBinding
@@ -23,11 +23,11 @@ class RecommendedAdapter(
 
     class PropertyViewHolder(
         private val binding: ItemRecommendedBinding,
-        private val onItemClick: (Property) -> Unit
+        private val onItemClick: (Hotels) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(property: Property) {
-            binding.recommendedImageView.setImageResource(property.imageResId)
+        fun bind(property: Hotels) {
+            binding.recommendedImageView.setImageResource(property.image)
             binding.propertyNameTextView .text = property.name
             binding.propertyLocationTextView.text = property.location
             binding.propertyPriceTextView   .text = property.price
@@ -39,11 +39,15 @@ class RecommendedAdapter(
         }
     }
 
-    class PropertyDiffCallback : DiffUtil.ItemCallback<Property>() {
-        override fun areItemsTheSame(oldItem: Property, newItem: Property) =
+    class PropertyDiffCallback : DiffUtil.ItemCallback<Hotels>() {
+        override fun areItemsTheSame(oldItem: Hotels, newItem: Hotels) =
             oldItem.name == newItem.name
 
-        override fun areContentsTheSame(oldItem: Property, newItem: Property) =
+        override fun areContentsTheSame(oldItem: Hotels, newItem: Hotels) =
             oldItem == newItem
+    }
+
+    override fun getItemCount(): Int {
+        return minOf(super.getItemCount(), 2)
     }
 }

@@ -8,11 +8,11 @@ import kz.grand_hotel.R
 
 class HomeViewModel : ViewModel() {
 
-    private val _properties = MutableLiveData<List<Property>>()
-    val properties: LiveData<List<Property>> = _properties
+    private val _properties = MutableLiveData<List<Hotels>>()
+    val properties: LiveData<List<Hotels>> = _properties
 
-    private val _recommendedProperties = MutableLiveData<List<Property>>()
-    val recommendedProperties: LiveData<List<Property>> = _recommendedProperties
+    private val _recommendedProperties = MutableLiveData<List<Hotels>>()
+    val recommendedProperties: LiveData<List<Hotels>> = _recommendedProperties
 
     private val _hotels = MutableLiveData<List<Hotels>>()
     val hotels: LiveData<List<Hotels>> = _hotels
@@ -27,9 +27,10 @@ class HomeViewModel : ViewModel() {
     private fun loadProperties() {
 
         val propertiesList = listOf(
-            Property(1, R.drawable.ic_onboarding1, "Kazakhstan Hotel", "Almaty, KZ", "$480/night", "4.5"),
-            Property(2, R.drawable.ic_onboarding2, "Almaty Hotel", "Almaty, KZ", "$250/night", "4.5"),
-            Property(3, R.drawable.ic_onboarding3, "Novotel", "Almaty, KZ", "$310/night", "4.5"),)
+            Hotels(1, "Novotel", "Almaty, KZ", LatLng(43.242284, 76.9575585), "4.7", "$320/night", R.drawable.ic_hotel1),
+            Hotels(2, "hotel 'Almaty'", "Almaty, KZ", LatLng(43.2500694, 76.9270366), "4.5", "$280/night", R.drawable.ic_hotel2),
+            Hotels(2, "Hotel 'Kazakhstan'", "Almaty, KZ", LatLng(43.2454565, 76.9423474), "4.0", "$250/night", R.drawable.ic_hotel3)
+        )
 
         val hotelsList = listOf(
             Hotels(1, "Novotel", "Almaty, KZ", LatLng(43.242284, 76.9575585), "4.7", "$320/night", R.drawable.ic_hotel1),
@@ -40,8 +41,9 @@ class HomeViewModel : ViewModel() {
         _hotels.value = hotelsList
         _properties.value = propertiesList
         _recommendedProperties.value = listOf(
-            Property(1, R.drawable.ic_onboarding1,"Ocean Breeze Resort", "Miami, FL", "$480/night", "4.5"),
-            Property(2, R.drawable.ic_onboarding2,"The Horizon Retreat", "Denver, CO", "$480/night", "4.2"),
+            Hotels(1, "Novotel", "Almaty, KZ", LatLng(43.242284, 76.9575585), "4.7", "$320/night", R.drawable.ic_hotel1),
+            Hotels(2, "hotel 'Almaty'", "Almaty, KZ", LatLng(43.2500694, 76.9270366), "4.5", "$280/night", R.drawable.ic_hotel2),
+            Hotels(2, "Hotel 'Kazakhstan'", "Almaty, KZ", LatLng(43.2454565, 76.9423474), "4.0", "$250/night", R.drawable.ic_hotel3)
         )
 
         _reviews.value = listOf(

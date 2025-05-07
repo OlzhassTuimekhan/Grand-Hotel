@@ -12,3 +12,4 @@ data class Hotels (
     val image: Int
 )
 
+

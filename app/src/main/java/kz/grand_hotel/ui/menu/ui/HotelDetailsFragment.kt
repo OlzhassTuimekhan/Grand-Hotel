@@ -28,7 +28,7 @@ class HotelDetailsFragment : Fragment() {
     private val recommendedAdapter by lazy {
         RecommendedAdapter { property ->
             val bundle = Bundle().apply {
-                putInt   ("imageResId", property.imageResId)
+                putInt   ("imageResId", property.image)
                 putString("name",       property.name)
                 putString("location",   property.location)
                 putString("price",      property.price)

@@ -21,7 +21,7 @@ class HomeFragment : Fragment() {
     private val propertyAdapter by lazy {
         PropertyAdapter { property ->
             val bundle = Bundle().apply {
-                putInt   ("imageResId", property.imageResId)
+                putInt   ("imageResId", property.image)
                 putString("name",       property.name)
                 putString("location",   property.location)
                 putString("price",      property.price)
@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
     private val recommendedAdapter by lazy {
         RecommendedAdapter { property ->
             val bundle = Bundle().apply {
-                putInt   ("imageResId", property.imageResId)
+                putInt   ("imageResId", property.image)
                 putString("name",       property.name)
                 putString("location",   property.location)
                 putString("price",      property.price)
@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.recyclerViewRecommended.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = recommendedAdapter
         }
 
