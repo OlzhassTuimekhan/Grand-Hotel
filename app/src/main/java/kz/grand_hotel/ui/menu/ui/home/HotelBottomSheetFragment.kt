@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentBottomSheetHotelBinding
-import kz.grand_hotel.ui.menu.ui.HotelDetailsFragment
 
 class HotelBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -22,7 +21,7 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         private const val ARG_HOTEL = "arg_hotel"
 
-        fun newInstance(hotel: HotelsInMap): HotelBottomSheetFragment {
+        fun newInstance(hotel: Hotels): HotelBottomSheetFragment {
             val json = Gson().toJson(hotel)
             return HotelBottomSheetFragment().apply {
                 arguments = Bundle().apply {
@@ -32,12 +31,12 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private lateinit var hotel: HotelsInMap
+    private lateinit var hotel: Hotels
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getString(ARG_HOTEL)?.let { json ->
-            hotel = Gson().fromJson(json, HotelsInMap::class.java)
+            hotel = Gson().fromJson(json, Hotels::class.java)
         } ?: run {
             dismiss()
         }

@@ -14,8 +14,8 @@ class HomeViewModel : ViewModel() {
     private val _recommendedProperties = MutableLiveData<List<Property>>()
     val recommendedProperties: LiveData<List<Property>> = _recommendedProperties
 
-    private val _hotels = MutableLiveData<List<HotelsInMap>>()
-    val hotels: LiveData<List<HotelsInMap>> = _hotels
+    private val _hotels = MutableLiveData<List<Hotels>>()
+    val hotels: LiveData<List<Hotels>> = _hotels
 
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
@@ -32,9 +32,9 @@ class HomeViewModel : ViewModel() {
             Property(3, R.drawable.ic_onboarding3, "Novotel", "Almaty, KZ", "$310/night", "4.5"),)
 
         val hotelsList = listOf(
-            HotelsInMap(1, "Novotel", "Almaty, KZ", LatLng(43.242284, 76.9575585), "4.7", "$320/night", R.drawable.ic_hotel1),
-            HotelsInMap(2, "hotel 'Almaty'", "Almaty, KZ", LatLng(43.2500694, 76.9270366), "4.5", "$280/night", R.drawable.ic_hotel2),
-            HotelsInMap(2, "Hotel 'Kazakhstan'", "Almaty, KZ", LatLng(43.2454565, 76.9423474), "4.0", "$250/night", R.drawable.ic_hotel3)
+            Hotels(1, "Novotel", "Almaty, KZ", LatLng(43.242284, 76.9575585), "4.7", "$320/night", R.drawable.ic_hotel1),
+            Hotels(2, "hotel 'Almaty'", "Almaty, KZ", LatLng(43.2500694, 76.9270366), "4.5", "$280/night", R.drawable.ic_hotel2),
+            Hotels(2, "Hotel 'Kazakhstan'", "Almaty, KZ", LatLng(43.2454565, 76.9423474), "4.0", "$250/night", R.drawable.ic_hotel3)
         )
 
         _hotels.value = hotelsList

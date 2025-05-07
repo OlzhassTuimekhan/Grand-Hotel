@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,6 +93,15 @@ class HotelDetailsFragment : Fragment() {
         homeViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             reviewAdapter.submitList(reviews)
         }
+//
+//        binding.hotelLocationImageView.setOnClickListener {
+//            val bundle = bundleOf(
+//                "target_lat" to hotel.locationLatLng.latitude,
+//                "target_lng" to hotel.locationLatLng.longitude
+//            )
+//            findNavController().navigate(R.id.mapFragment, bundle)
+//
+//        }
 
 
         binding.backButton.setOnClickListener {

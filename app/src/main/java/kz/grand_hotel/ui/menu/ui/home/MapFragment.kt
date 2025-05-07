@@ -2,7 +2,6 @@ package kz.grand_hotel.ui.menu.ui.home
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -47,8 +46,32 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private var userLocation: LatLng? = null
+    private var targetLocation: LatLng? = null
 
+    companion object {
+        private const val ARG_TARGET_LAT = "target_lat"
+        private const val ARG_TARGET_LNG = "target_lng"
 
+        fun newInstance(lat: Double, lng: Double): MapFragment =
+            MapFragment().apply {
+                arguments = Bundle().apply {
+                    putDouble(ARG_TARGET_LAT, lat)
+                    putDouble(ARG_TARGET_LNG, lng)
+                }
+            }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            if (it.containsKey(ARG_TARGET_LAT) && it.containsKey(ARG_TARGET_LNG)) {
+                targetLocation = LatLng(
+                    it.getDouble(ARG_TARGET_LAT),
+                    it.getDouble(ARG_TARGET_LNG)
+                )
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,6 +122,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+
+        targetLocation?.let { loc ->
+            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15f))
+            googleMap?.addMarker(
+                MarkerOptions()
+                    .position(loc)
+                    .title("Selected Hotel")
+            )
+            return
+        }
 
         setupSearch()
 
@@ -218,7 +251,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
-    private fun addHotelMarkers(hotels: List<HotelsInMap>) {
+    private fun addHotelMarkers(hotels: List<Hotels>) {
         hotels.forEach { hotel ->
             val markerWidth = 200
             val markerHeight = 240
