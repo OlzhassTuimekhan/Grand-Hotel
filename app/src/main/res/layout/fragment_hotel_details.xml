@@ -250,15 +250,34 @@
                 android:textSize="14sp"
                 android:layout_marginTop="8dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Location"
-                android:textColor="@color/black"
-                android:fontFamily="@font/jost_semibold"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Location"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/OpenMapTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Open Map"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textSize="14sp"
+                    android:textColor="#1E88E5" />
+
+            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -270,22 +289,7 @@
                     android:background="#F0F0F0"
                     android:src="@drawable/map_placeholder_1"
                     android:scaleType="centerCrop" />
-                <TextView
-                    android:id="@+id/openMapTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Open Map"
-                    android:fontFamily="@font/jost_medium"
-                    android:textSize="14sp"
-                    android:textColor="#1E88E5"
-                    android:layout_gravity="end|bottom"
-                    android:padding="8dp" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="android:layout_marginTop=&quot;8dp&quot;&#xA;                android:paddingStart=&quot;16dp&quot;&#xA;                android:paddingEnd=&quot;16dp&quot;" />
             </FrameLayout>
 
             <TextView
@@ -336,24 +340,40 @@
                 android:paddingEnd="16dp"
                 tools:listitem="@layout/item_review" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Recommendation"
-                android:textColor="@color/black"
-                android:fontFamily="@font/jost_semibold"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recommendation"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/seeAllReccommendTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See All"
+                    android:fontFamily="@font/jost_semibold"
+                    android:textSize="14sp"
+                    android:textColor="#1E88E5" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewRecommended"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 tools:listitem="@layout/item_recommended" />
 
             <HorizontalScrollView
@@ -366,17 +386,6 @@
                     android:orientation="horizontal">
                 </LinearLayout>
             </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/seeAllRecommendationsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="See All"
-                android:fontFamily="@font/jost_medium"
-                android:textSize="14sp"
-                android:textColor="#1E88E5"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="end" />
 
             <View
                 android:layout_width="match_parent"

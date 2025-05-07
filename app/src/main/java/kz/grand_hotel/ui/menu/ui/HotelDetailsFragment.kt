@@ -9,11 +9,13 @@ import android.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentHotelDetailsBinding
 import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
 import kz.grand_hotel.ui.menu.ui.home.RecommendedAdapter
+import kz.grand_hotel.ui.menu.ui.home.ReviewAdapter
 
 
 class HotelDetailsFragment : Fragment() {
@@ -56,9 +58,6 @@ class HotelDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
         val args = requireArguments()
         val imageResId = args.getInt("imageResId")
         val name       = args.getString("name")
@@ -66,19 +65,32 @@ class HotelDetailsFragment : Fragment() {
         val price      = args.getString("price")
         val rating     = args.getString("rating")
 
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
         binding.hotelImageView.setImageResource(imageResId)
         binding.hotelNameTextView.text       = name
         binding.hotelLocationTextView.text   = location
         binding.priceBottomTextView.text     = price
         binding.hotelRatingTextView.text     = rating
 
-        binding.recyclerViewRecommended.apply {
+
+        val reviewAdapter = ReviewAdapter()
+        binding.reviewsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            adapter = reviewAdapter
+        }
+
+        binding.recyclerViewRecommended.apply {
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
             adapter = recommendedAdapter
         }
 
         homeViewModel.recommendedProperties.observe(viewLifecycleOwner) { recommendedProperties ->
             recommendedAdapter.submitList(recommendedProperties)
+        }
+
+        homeViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
+            reviewAdapter.submitList(reviews)
         }
 
 

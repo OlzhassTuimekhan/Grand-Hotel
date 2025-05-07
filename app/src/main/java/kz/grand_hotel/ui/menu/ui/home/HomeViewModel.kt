@@ -46,13 +46,13 @@ class HomeViewModel : ViewModel() {
 
         _reviews.value = listOf(
             Review(
-                avatarResId = R.drawable.,
+                avatarResId = R.drawable.ic_profile_dolares,
                 authorName  = "Kim Borrdy",
                 rating      = 4.5f,
                 comment     = "Amazing! The room is better than the picture. Thanks for amazing experience!"
             ),
             Review(
-                avatarResId = R.drawable.avatar_2,
+                avatarResId = R.drawable.ic_profile_dolares,
                 authorName  = "Mirai Kamazuki",
                 rating      = 5.0f,
                 comment     = "The service is on point, and I really like the facilities. Good job!"
