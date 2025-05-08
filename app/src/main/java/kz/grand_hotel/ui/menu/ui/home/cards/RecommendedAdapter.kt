@@ -48,7 +48,5 @@ class RecommendedAdapter(
             oldItem == newItem
     }
 
-    override fun getItemCount(): Int {
-        return minOf(super.getItemCount(), 2)
-    }
+
 }

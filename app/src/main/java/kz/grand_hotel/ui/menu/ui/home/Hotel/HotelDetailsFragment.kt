@@ -109,6 +109,10 @@ class HotelDetailsFragment : Fragment() {
             findNavController().navigate(R.id.action_hotelDetailsFragment_to_reviewsFragment)
         }
 
+        binding.seeAllReccommendTextView.setOnClickListener {
+            findNavController().navigate(R.id.action_hotelDetailsFragment_to_recommendedFragment)
+        }
+
         val openMapListener = View.OnClickListener {
             val bundle = bundleOf(
                 "target_lat" to latitude,

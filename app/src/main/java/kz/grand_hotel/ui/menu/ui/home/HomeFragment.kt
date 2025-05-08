@@ -85,7 +85,7 @@ class HomeFragment : Fragment() {
             propertyAdapter.submitList(properties)
         }
         homeViewModel.recommendedProperties.observe(viewLifecycleOwner) { recommendedProperties ->
-            recommendedAdapter.submitList(recommendedProperties)
+            recommendedAdapter.submitList(recommendedProperties.take(2))
         }
 
         binding.hotelNearYou.setOnClickListener {
