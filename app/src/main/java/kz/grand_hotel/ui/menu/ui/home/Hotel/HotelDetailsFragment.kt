@@ -97,11 +97,16 @@ class HotelDetailsFragment : Fragment() {
         }
 
         hotelViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
-            reviewAdapter.submitList(reviews)
+            val limited = reviews.take(3)
+            reviewAdapter.submitList(limited)
         }
 
         binding.seeAllFacilitiesTextView.setOnClickListener {
             findNavController().navigate(R.id.action_hotelDetailsFragment_to_facilitiesFragment)
+        }
+
+        binding.seeAllReviewsTextView.setOnClickListener {
+            findNavController().navigate(R.id.action_hotelDetailsFragment_to_reviewsFragment)
         }
 
         val openMapListener = View.OnClickListener {

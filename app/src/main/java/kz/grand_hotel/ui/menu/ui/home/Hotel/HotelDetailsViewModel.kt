@@ -17,6 +17,8 @@ class HotelDetailsViewModel: ViewModel()  {
     private val _facilities = MutableLiveData<List<FacilityGroup>>()
     val facilities: LiveData<List<FacilityGroup>> = _facilities
 
+    public val averageRating = 4.5f
+
     init {
         loadData()
     }
@@ -26,7 +28,7 @@ class HotelDetailsViewModel: ViewModel()  {
             Review(
                 avatarResId = R.drawable.ic_profile_dolares,
                 authorName  = "Kim Borrdy",
-                rating      = 4.5f,
+                rating      = 4.0f,
                 comment     = "Amazing! The room is better than the picture. Thanks for amazing experience!"
             ),
             Review(
@@ -44,13 +46,13 @@ class HotelDetailsViewModel: ViewModel()  {
             Review(
                 avatarResId = R.drawable.ic_profile_dolares,
                 authorName  = "Sofia Müller",
-                rating      = 4.8f,
+                rating      = 4.0f,
                 comment     = "Staff were extremely friendly and helpful. Room was spotless!"
             ),
             Review(
                 avatarResId = R.drawable.ic_profile_dolares,
                 authorName  = "Arjun Patel",
-                rating      = 3.9f,
+                rating      = 3.0f,
                 comment     = "Good value for money. Wi-Fi was a bit slow at times."
             )
         )

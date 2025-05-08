@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_hotelDetailsFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_hotelDetailsFragment_to_reviewsFragment"
+            app:destination="@id/reviewsFragment" />
     </fragment>
 
     <fragment
@@ -54,6 +57,11 @@
         android:label="Facilities"
         tools:layout="@layout/fragment_facilities" />
 
+    <fragment
+        android:id="@+id/reviewsFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.Hotel.ReviewsFragment"
+        android:label="Reviews"
+        tools:layout="@layout/fragment_reviews" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="kz.grand_hotel.ui.menu.ui.home.search.SearchFragment"

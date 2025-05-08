@@ -30,7 +30,6 @@ class ReviewAdapter : ListAdapter<Review, ReviewAdapter.ReviewViewHolder>(DiffCa
         private val comment: TextView       = itemView.findViewById(R.id.commentTextView)
 
         fun bind(item: Review) {
-            // Загрузка аватара через Glide
             Glide.with(itemView)
                 .load(item.avatarResId)
                 .circleCrop()
@@ -49,4 +48,5 @@ class ReviewAdapter : ListAdapter<Review, ReviewAdapter.ReviewViewHolder>(DiffCa
         override fun areContentsTheSame(old: Review, new: Review) =
             old == new
     }
+
 }
