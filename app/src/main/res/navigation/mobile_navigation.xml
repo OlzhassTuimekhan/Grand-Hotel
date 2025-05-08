@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/hotelDetailsFragment"
-        android:name="kz.grand_hotel.ui.menu.ui.home.HotelDetailsFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.Hotel.HotelDetailsFragment"
         android:label="Detail"
         tools:layout="@layout/fragment_hotel_details" >
         <action

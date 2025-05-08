@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.databinding.ItemRecommendedBinding
+import kz.grand_hotel.ui.menu.ui.home.Hotel.Hotels
 
 class RecommendedAdapter(
     private val onItemClick: (Hotels) -> Unit

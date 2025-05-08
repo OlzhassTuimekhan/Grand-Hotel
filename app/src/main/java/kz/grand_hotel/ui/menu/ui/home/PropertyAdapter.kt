@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
+import kz.grand_hotel.ui.menu.ui.home.Hotel.Hotels
 
 class PropertyAdapter(
     private val onItemClick: (Hotels) -> Unit

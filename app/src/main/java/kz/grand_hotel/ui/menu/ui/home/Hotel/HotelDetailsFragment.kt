@@ -1,4 +1,4 @@
-package kz.grand_hotel.ui.menu.ui.home
+package kz.grand_hotel.ui.menu.ui.home.Hotel
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentHotelDetailsBinding
+import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
+import kz.grand_hotel.ui.menu.ui.home.RecommendedAdapter
 
 
 class HotelDetailsFragment : Fragment() {

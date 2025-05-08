@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 import kz.grand_hotel.R
+import kz.grand_hotel.ui.menu.ui.home.Hotel.Hotels
+import kz.grand_hotel.ui.menu.ui.home.Hotel.Review
 
 class HomeViewModel : ViewModel() {
 

@@ -52,7 +52,7 @@ class FacilitiesFragment : Fragment() {
                     "Airport drop-off"
                 )
             ),
-            // ... добавьте остальные группы
+
         )
 
         binding.facilitiesRecyclerView.apply {

@@ -1,4 +1,4 @@
-package kz.grand_hotel.ui.menu.ui.home
+package kz.grand_hotel.ui.menu.ui.home.Hotel
 
 import com.google.android.gms.maps.model.LatLng
 
