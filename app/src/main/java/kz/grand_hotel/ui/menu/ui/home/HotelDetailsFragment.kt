@@ -1,22 +1,16 @@
-package kz.grand_hotel.ui.menu.ui
+package kz.grand_hotel.ui.menu.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toolbar
-import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
-import kz.grand_hotel.databinding.FragmentHomeBinding
 import kz.grand_hotel.databinding.FragmentHotelDetailsBinding
-import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
-import kz.grand_hotel.ui.menu.ui.home.RecommendedAdapter
-import kz.grand_hotel.ui.menu.ui.home.ReviewAdapter
 
 
 class HotelDetailsFragment : Fragment() {
@@ -93,6 +87,11 @@ class HotelDetailsFragment : Fragment() {
         homeViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             reviewAdapter.submitList(reviews)
         }
+
+        binding.seeAllFacilitiesTextView.setOnClickListener {
+            findNavController().navigate(R.id.action_hotelDetailsFragment_to_facilitiesFragment)
+        }
+
 //
 //        binding.hotelLocationImageView.setOnClickListener {
 //            val bundle = bundleOf(

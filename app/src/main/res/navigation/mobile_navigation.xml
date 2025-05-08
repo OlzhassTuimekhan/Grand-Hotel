@@ -34,13 +34,22 @@
 
     <fragment
         android:id="@+id/hotelDetailsFragment"
-        android:name="kz.grand_hotel.ui.menu.ui.HotelDetailsFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.HotelDetailsFragment"
         android:label="Detail"
         tools:layout="@layout/fragment_hotel_details" >
         <action
             android:id="@+id/action_hotelDetailsFragment_self"
             app:destination="@id/hotelDetailsFragment" />
+        <action
+            android:id="@+id/action_hotelDetailsFragment_to_facilitiesFragment"
+            app:destination="@id/facilitiesFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/facilitiesFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.Facilities.FacilitiesFragment"
+        android:label="Facilities"
+        tools:layout="@layout/fragment_facilities" />
 
     <fragment
         android:id="@+id/searchFragment"
