@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentHomeBinding
+import kz.grand_hotel.ui.menu.ui.home.cards.PropertyAdapter
+import kz.grand_hotel.ui.menu.ui.home.cards.RecommendedAdapter
 
 class HomeFragment : Fragment() {
 

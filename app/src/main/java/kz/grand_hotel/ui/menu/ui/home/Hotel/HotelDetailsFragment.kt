@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentHotelDetailsBinding
 import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
-import kz.grand_hotel.ui.menu.ui.home.RecommendedAdapter
+import kz.grand_hotel.ui.menu.ui.home.cards.RecommendedAdapter
 
 
 class HotelDetailsFragment : Fragment() {

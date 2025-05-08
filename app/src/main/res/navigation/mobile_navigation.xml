@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="kz.grand_hotel.ui.menu.ui.home.MapFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.map.MapFragment"
         android:label="Map"
         tools:layout="@layout/fragment_map" >
         <action

@@ -1,4 +1,4 @@
-package kz.grand_hotel.ui.menu.ui.home
+package kz.grand_hotel.ui.menu.ui.home.map
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -36,6 +36,7 @@ import androidx.lifecycle.ViewModelProvider
 import kz.grand_hotel.databinding.FragmentMapBinding
 import android.graphics.Path
 import android.graphics.RectF
+import kz.grand_hotel.ui.menu.ui.home.HomeViewModel
 import kz.grand_hotel.ui.menu.ui.home.Hotel.HotelBottomSheetFragment
 import kz.grand_hotel.ui.menu.ui.home.Hotel.Hotels
 

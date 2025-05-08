@@ -1,4 +1,4 @@
-package kz.grand_hotel.ui.menu.ui.home
+package kz.grand_hotel.ui.menu.ui.home.cards
 
 import android.view.LayoutInflater
 import android.view.View
