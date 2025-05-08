@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kz.grand_hotel.databinding.FragmentFacilitiesBinding
+import kz.grand_hotel.ui.menu.ui.home.Hotel.HotelDetailsViewModel
 
 
 class FacilitiesFragment : Fragment() {
@@ -14,6 +16,9 @@ class FacilitiesFragment : Fragment() {
     private var _binding: FragmentFacilitiesBinding? = null
     private val binding get() = _binding!!
 
+    private val hotelViewModel by lazy {
+        ViewModelProvider(requireActivity())[HotelDetailsViewModel::class.java]
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -32,33 +37,13 @@ class FacilitiesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val data = listOf(
-            FacilityGroup(
-                title = "Food and Drink",
-                children = listOf(
-                    "A la carte dinner",
-                    "A la carte lunch",
-                    "Breakfast",
-                    "Vegetarian meal"
-                )
-            ),
-            FacilityGroup(
-                title = "Transportation",
-                children = listOf(
-                    "Airport shuttle",
-                    "Car rental",
-                    "Taxi service",
-                    "Shuttle service",
-                    "Airport drop-off"
-                )
-            ),
-
-        )
-
         binding.facilitiesRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = FacilityGroupAdapter(data)
         }
+        hotelViewModel.facilities.observe(viewLifecycleOwner) { groups ->
+            binding.facilitiesRecyclerView.adapter = FacilityGroupAdapter(groups)
+        }
+
 
         binding.backButton.setOnClickListener {
             requireActivity().onBackPressed()

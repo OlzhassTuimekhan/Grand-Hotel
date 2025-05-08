@@ -20,6 +20,8 @@ class HotelDetailsFragment : Fragment() {
     private var _binding: FragmentHotelDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var hotelViewModel: HotelDetailsViewModel
+
 
     private val recommendedAdapter by lazy {
         RecommendedAdapter { property ->
@@ -86,7 +88,7 @@ class HotelDetailsFragment : Fragment() {
             recommendedAdapter.submitList(recommendedProperties)
         }
 
-        homeViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
+        hotelViewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             reviewAdapter.submitList(reviews)
         }
 
