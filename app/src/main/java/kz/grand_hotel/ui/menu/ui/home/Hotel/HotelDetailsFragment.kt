@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,9 +27,12 @@ class HotelDetailsFragment : Fragment() {
     private val recommendedAdapter by lazy {
         RecommendedAdapter { property ->
             val bundle = Bundle().apply {
+                putInt   ("id", property.id)
                 putInt   ("imageResId", property.image)
                 putString("name",       property.name)
                 putString("location",   property.location)
+                putDouble("latitude",   property.locationLatLng.latitude)
+                putDouble("longitude",  property.locationLatLng.longitude)
                 putString("price",      property.price)
                 putString("rating",     property.rating)
             }
@@ -58,11 +62,15 @@ class HotelDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = requireArguments()
+        val id         = args.getInt("id")
         val imageResId = args.getInt("imageResId")
         val name       = args.getString("name")
         val location   = args.getString("location")
+        val latitude   = args.getDouble("latitude")
+        val longitude  = args.getDouble("longitude")
         val price      = args.getString("price")
         val rating     = args.getString("rating")
+
 
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         hotelViewModel = ViewModelProvider(this).get(HotelDetailsViewModel::class.java)
@@ -96,15 +104,19 @@ class HotelDetailsFragment : Fragment() {
             findNavController().navigate(R.id.action_hotelDetailsFragment_to_facilitiesFragment)
         }
 
-//
-//        binding.hotelLocationImageView.setOnClickListener {
-//            val bundle = bundleOf(
-//                "target_lat" to hotel.locationLatLng.latitude,
-//                "target_lng" to hotel.locationLatLng.longitude
-//            )
-//            findNavController().navigate(R.id.mapFragment, bundle)
-//
-//        }
+        val openMapListener = View.OnClickListener {
+            val bundle = bundleOf(
+                "target_lat" to latitude,
+                "target_lng" to longitude
+            )
+            findNavController().navigate(
+                R.id.action_hotelDetailsFragment_to_mapFragment,
+                bundle
+            )
+        }
+        binding.hotelLocationImageView.setOnClickListener(openMapListener)
+        binding.OpenMapTextView.setOnClickListener(openMapListener)
+
 
 
         binding.backButton.setOnClickListener {

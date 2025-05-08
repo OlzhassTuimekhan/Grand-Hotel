@@ -125,38 +125,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-
-        targetLocation?.let { loc ->
-            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15f))
-            googleMap?.addMarker(
-                MarkerOptions()
-                    .position(loc)
-                    .title("Selected Hotel")
-            )
-            return
-        }
-
         setupSearch()
 
         homeViewModel.hotels.observe(viewLifecycleOwner) { hotels ->
-            addHotelMarkers(hotels)
+            googleMap?.clear()
+
+            userLocation?.let { addUserMarker(it) }
+
+            addHotelMarkers(hotels, selectedLocation = targetLocation)
 
             googleMap?.setOnMarkerClickListener { marker ->
-                val hotel = hotels.find { it.name == marker.title }
-                hotel?.let {
-                    HotelBottomSheetFragment
-                        .newInstance(it)
+                hotels.find { it.name == marker.title }?.let {
+                    HotelBottomSheetFragment.newInstance(it)
                         .show(parentFragmentManager, null)
                 }
                 true
             }
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
             googleMap!!.isMyLocationEnabled = true
             loadUserLocationAndMarkers()
         } else {
@@ -166,26 +154,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 1
             )
         }
+
+        targetLocation?.let { loc ->
+            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15f))
+        }
     }
 
     @SuppressLint("MissingPermission")
     private fun loadUserLocationAndMarkers() {
-        val fused = com.google.android.gms.location.LocationServices
-            .getFusedLocationProviderClient(requireContext())
-
-        fused.lastLocation.addOnSuccessListener { loc: Location? ->
+        fusedLocationClient.lastLocation.addOnSuccessListener { loc: Location? ->
             loc?.let {
                 userLocation = LatLng(it.latitude, it.longitude)
-
-                // *** Сразу центрируем камеру на моей точке ***
-                googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!, 15f))
-
-                // рисуем собственный маркер
                 addUserMarker(userLocation!!)
 
-                // и сразу показываем все отели
-                homeViewModel.hotels.observe(viewLifecycleOwner) { hotels ->
-                    addHotelMarkers(hotels)
+                if (targetLocation == null) {
+                    googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!, 15f))
                 }
             }
         }
@@ -254,8 +237,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
-    private fun addHotelMarkers(hotels: List<Hotels>) {
+    private fun addHotelMarkers(hotels: List<Hotels>, selectedLocation: LatLng? = null) {
         hotels.forEach { hotel ->
+            val isSelected = hotel.locationLatLng == selectedLocation
             val markerWidth = 200
             val markerHeight = 240
 
@@ -276,7 +260,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
 
             Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = ContextCompat.getColor(requireContext(), R.color.blue)
+                color = ContextCompat.getColor(requireContext(), if(isSelected) R.color.red else R.color.blue)
                 style = Paint.Style.STROKE
                 this.strokeWidth = strokeWidth
             }.let { paint ->
@@ -338,7 +322,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 MarkerOptions()
                     .position(hotel.locationLatLng)
                     .title(hotel.name)
-                    .icon(icon)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
             )
         }
     }

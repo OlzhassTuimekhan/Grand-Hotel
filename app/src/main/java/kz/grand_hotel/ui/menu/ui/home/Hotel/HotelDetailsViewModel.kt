@@ -34,8 +34,27 @@ class HotelDetailsViewModel: ViewModel()  {
                 authorName  = "Mirai Kamazuki",
                 rating      = 5.0f,
                 comment     = "The service is on point, and I really like the facilities. Good job!"
+            ),
+            Review(
+                avatarResId = R.drawable.ic_profile_dolares,
+                authorName  = "Luca Fernandes",
+                rating      = 4.0f,
+                comment     = "Very comfortable stay, breakfast was delicious. Parking could be improved."
+            ),
+            Review(
+                avatarResId = R.drawable.ic_profile_dolares,
+                authorName  = "Sofia Müller",
+                rating      = 4.8f,
+                comment     = "Staff were extremely friendly and helpful. Room was spotless!"
+            ),
+            Review(
+                avatarResId = R.drawable.ic_profile_dolares,
+                authorName  = "Arjun Patel",
+                rating      = 3.9f,
+                comment     = "Good value for money. Wi-Fi was a bit slow at times."
             )
         )
+
 
         _facilities.value = listOf(
             FacilityGroup(
@@ -57,8 +76,74 @@ class HotelDetailsViewModel: ViewModel()  {
                     "Airport drop-off"
                 )
             ),
-
+            FacilityGroup(
+                title = "General",
+                children = listOf(
+                    "Free parking",
+                    "Non-smoking rooms",
+                    "Pet friendly",
+                    "Air conditioning",
+                    "Lift"
+                )
+            ),
+            FacilityGroup(
+                title = "Hotel Service",
+                children = listOf(
+                    "24-hour front desk",
+                    "Concierge service",
+                    "Laundry service",
+                    "Room service",
+                    "Wake-up call"
+                )
+            ),
+            FacilityGroup(
+                title = "Business Facilities",
+                children = listOf(
+                    "Business centre",
+                    "Meeting rooms",
+                    "Fax/photocopying",
+                    "Projector",
+                    "Computer station"
+                )
+            ),
+            FacilityGroup(
+                title = "Nearby Facilities",
+                children = listOf(
+                    "Restaurant",
+                    "Bar",
+                    "Shopping mall",
+                    "Park",
+                    "Museum"
+                )
+            ),
+            FacilityGroup(
+                title = "Kids",
+                children = listOf(
+                    "Kids’ club",
+                    "Indoor play area",
+                    "Outdoor playground"
+                )
+            ),
+            FacilityGroup(
+                title = "Connectivity",
+                children = listOf(
+                    "Free Wi-Fi",
+                    "Wired internet",
+                    "Public computers"
+                )
+            ),
+            FacilityGroup(
+                title = "Public Facilities",
+                children = listOf(
+                    "Safety deposit box",
+                    "ATM on site",
+                    "Ticket service",
+                    "Shared lounge/TV area",
+                    "Vending machine"
+                )
             )
+        )
+
 
 
     }

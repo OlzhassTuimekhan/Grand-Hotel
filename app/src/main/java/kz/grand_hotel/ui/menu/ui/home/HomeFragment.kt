@@ -23,11 +23,15 @@ class HomeFragment : Fragment() {
     private val propertyAdapter by lazy {
         PropertyAdapter { property ->
             val bundle = Bundle().apply {
+                putInt   ("id", property.id)
                 putInt   ("imageResId", property.image)
                 putString("name",       property.name)
                 putString("location",   property.location)
+                putDouble("latitude",   property.locationLatLng.latitude)
+                putDouble("longitude",  property.locationLatLng.longitude)
                 putString("price",      property.price)
                 putString("rating",     property.rating)
+
             }
             findNavController().navigate(
                 R.id.action_navigation_home_to_hotelDetailsFragment
@@ -38,9 +42,12 @@ class HomeFragment : Fragment() {
     private val recommendedAdapter by lazy {
         RecommendedAdapter { property ->
             val bundle = Bundle().apply {
+                putInt   ("id", property.id)
                 putInt   ("imageResId", property.image)
                 putString("name",       property.name)
                 putString("location",   property.location)
+                putDouble("latitude",   property.locationLatLng.latitude)
+                putDouble("longitude",  property.locationLatLng.longitude)
                 putString("price",      property.price)
                 putString("rating",     property.rating)
             }

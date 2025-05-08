@@ -1,13 +1,11 @@
-package kz.grand_hotel.ui.menu.ui.home
+package kz.grand_hotel.ui.menu.ui.home.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kz.grand_hotel.R
 import kz.grand_hotel.databinding.FragmentSearchBinding
-import kz.grand_hotel.databinding.FragmentSignInBinding
 
 
 class SearchFragment : Fragment() {

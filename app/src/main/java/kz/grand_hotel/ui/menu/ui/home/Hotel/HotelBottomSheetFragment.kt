@@ -54,13 +54,11 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Подставляем данные
         binding.hotelNameTextView.text     = hotel.name
-        binding.hotelLocationTextView.text = ""  // если у вас есть поле location
+        binding.hotelLocationTextView.text = ""
         binding.hotelPriceTextView.text    = hotel.price
         binding.hotelRatingTextView.text   = hotel.rating
 
-        // Загружаем картинку Glide-ом
         Glide.with(this)
             .load(hotel.image)
             .centerCrop()
@@ -69,9 +67,12 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
         binding.bookingButton.setOnClickListener {
 
             val bundle = Bundle().apply {
+                putInt   ("id", hotel.id)
                 putInt   ("imageResId", hotel.image)
                 putString("name",       hotel.name)
                 putString("location",   hotel.location)
+                putDouble("latitude",   hotel.locationLatLng.latitude)
+                putDouble("longitude",  hotel.locationLatLng.longitude)
                 putString("price",      hotel.price)
                 putString("rating",     hotel.rating)
             }
@@ -83,13 +84,12 @@ class HotelBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         binding.chatButton.setOnClickListener {
-            // ваш код для чата
+
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // не забываем отчищать binding
         _binding = null
     }
 }
