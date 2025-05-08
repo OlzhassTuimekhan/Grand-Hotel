@@ -65,7 +65,7 @@ class HotelDetailsFragment : Fragment() {
         val rating     = args.getString("rating")
 
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
+        hotelViewModel = ViewModelProvider(this).get(HotelDetailsViewModel::class.java)
         binding.hotelImageView.setImageResource(imageResId)
         binding.hotelNameTextView.text       = name
         binding.hotelLocationTextView.text   = location
