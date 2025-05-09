@@ -80,7 +80,16 @@
         <action
             android:id="@+id/action_searchFragment_to_hotelDetailsFragment"
             app:destination="@id/hotelDetailsFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_filterBottomSheetFragment"
+            app:destination="@id/filterBottomSheetFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/filterBottomSheetFragment"
+        android:name="kz.grand_hotel.ui.menu.ui.home.search.FilterBottomSheetFragment"
+        android:label="Filter"
+        tools:layout="@layout/fragment_filter_bottom_sheet_list_dialog"/>
 
     <fragment
         android:id="@+id/navigation_my_booking"

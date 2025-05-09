@@ -99,6 +99,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             visibility    = View.GONE
         }
 
+        binding.filterButton.setOnClickListener {
+            val filterBottomSheet = FilterBottomSheetFragment()
+
+            // Отобразите Bottom Sheet
+            filterBottomSheet.show(childFragmentManager, filterBottomSheet.tag)
+        }
+
 
         binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
         binding.clearAllTextView.setOnClickListener { searchViewModel.clearAllSearches() }
