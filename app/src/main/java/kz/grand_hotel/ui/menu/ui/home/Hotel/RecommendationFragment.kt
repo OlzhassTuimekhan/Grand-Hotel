@@ -22,7 +22,7 @@ class RecommendationFragment : Fragment() {
     private lateinit var hotelViewModel: HotelDetailsViewModel
     private lateinit var homeViewModel: HomeViewModel
 
-        private val recommendedAdapter by lazy {
+    private val recommendedAdapter by lazy {
         RecommendedAdapter { property ->
             val bundle = Bundle().apply {
                 putInt   ("id", property.id)

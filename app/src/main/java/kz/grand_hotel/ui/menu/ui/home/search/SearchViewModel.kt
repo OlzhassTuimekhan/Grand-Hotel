@@ -3,7 +3,9 @@ package kz.grand_hotel.ui.menu.ui.home.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.maps.model.LatLng
 import kz.grand_hotel.R
+import kz.grand_hotel.ui.menu.ui.home.Hotel.Hotels
 
 class SearchViewModel : ViewModel() {
 
@@ -11,13 +13,28 @@ class SearchViewModel : ViewModel() {
     val recentSearches: LiveData<List<RecentSearch>> = _recentSearches
 
 
-    private val _recentlyViewed = MutableLiveData<List<RecentlyViewed>>(listOf(
-        RecentlyViewed(1, R.drawable.ic_onboarding1, "Mystic Palms", "Palm Springs, CA", "$230/night", "4.0"),
-        RecentlyViewed(2, R.drawable.ic_onboarding2, "Sapphire Cove Hotel", "Key West, FL", "$290/night", "3.8"),
-        RecentlyViewed(3, R.drawable.ic_onboarding3, "Elysian Suites", "San Diego, CA", "$320/night", "3.8")
+    private val _recentlyViewed = MutableLiveData<List<Hotels>>(listOf(
+        Hotels(
+            id = 1,
+            name = "The Ritz-Carlton, Almaty",
+            location = "Prospekt Al-Farabi 77, Almaty, Kazakhstan",
+            locationLatLng = LatLng(43.248300, 76.923400),
+            rating = "4.8",
+            price = "$350/night",
+            image = R.drawable.ic_hotel1
+        ),
+        Hotels(
+            id = 2,
+            name = "InterContinental Almaty",
+            location = "109 Abaya Ave, Almaty, Kazakhstan",
+            locationLatLng = LatLng(43.249200, 76.924600),
+            rating = "4.6",
+            price = "$300/night",
+            image = R.drawable.ic_hotel2
+        ),
     ))
-    
-    val recentlyViewed: LiveData<List<RecentlyViewed>> = _recentlyViewed
+
+    val recentlyViewed: LiveData<List<Hotels>> = _recentlyViewed
 
     fun addSearch(query: String) {
         if (query.isBlank()) return
