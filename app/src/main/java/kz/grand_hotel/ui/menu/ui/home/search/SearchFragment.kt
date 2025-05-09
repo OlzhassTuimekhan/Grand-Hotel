@@ -22,7 +22,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var homeViewModel: HomeViewModel
 
     private val recentlyViewed by lazy {
-        RecommendedAdapter { property ->
+        RecentlyViewedAdapter { property ->
             val bundle = Bundle().apply {
                 putInt   ("id", property.id)
                 putInt   ("imageResId", property.image)
@@ -69,8 +69,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = recentlyViewed
         }
-        searchViewModel.recentlyViewed.observe(viewLifecycleOwner) { recommendedProperties ->
-            recentlyViewed.submitList(recommendedProperties)
+        searchViewModel.recentlyViewed.observe(viewLifecycleOwner) { recentlyViewedList ->
+            recentlyViewed.submitList(recentlyViewedList)
         }
 
         binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
