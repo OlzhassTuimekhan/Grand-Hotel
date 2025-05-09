@@ -97,10 +97,12 @@
         android:paddingTop="16dp">
 
         <TextView
+            android:id="@+id/recentSearchesTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Recent Searches"
+            android:fontFamily="@font/jost_bold"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -109,6 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Clear All"
+            android:fontFamily="@font/jost_semibold"
             android:textSize="14sp"
             android:textColor="#F44336" />
 
@@ -120,8 +123,17 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        tools:listitem="@layout/item_recent_search" />
+        tools:listitem="@layout/item_recent_search"
+         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/resultsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:visibility="gone"
+        tools:listitem="@layout/item_recently_viewed" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,6 +143,7 @@
         android:paddingTop="16dp">
 
         <TextView
+            android:id="@+id/recentlyViewedTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -147,6 +160,8 @@
             android:textColor="#1E88E5" />
 
     </LinearLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recentlyViewedRecyclerView"

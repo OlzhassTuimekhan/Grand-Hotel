@@ -3,51 +3,60 @@ package kz.grand_hotel.ui.menu.ui.home.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.launch
 import kz.grand_hotel.R
+import kz.grand_hotel.data.SearchPrefs
 import kz.grand_hotel.ui.menu.ui.home.Hotel.Hotels
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(
+    private val prefs: SearchPrefs
+): ViewModel() {
 
     private val _recentSearches = MutableLiveData<List<RecentSearch>>(emptyList())
     val recentSearches: LiveData<List<RecentSearch>> = _recentSearches
 
-
-    private val _recentlyViewed = MutableLiveData<List<Hotels>>(listOf(
-        Hotels(
-            id = 1,
-            name = "The Ritz-Carlton, Almaty",
-            location = "Prospekt Al-Farabi 77, Almaty, Kazakhstan",
-            locationLatLng = LatLng(43.248300, 76.923400),
-            rating = "4.8",
-            price = "$350/night",
-            image = R.drawable.ic_hotel1
-        ),
-        Hotels(
-            id = 2,
-            name = "InterContinental Almaty",
-            location = "109 Abaya Ave, Almaty, Kazakhstan",
-            locationLatLng = LatLng(43.249200, 76.924600),
-            rating = "4.6",
-            price = "$300/night",
-            image = R.drawable.ic_hotel2
-        ),
-    ))
-
+    private val _recentlyViewed = MutableLiveData<List<Hotels>>(emptyList())
     val recentlyViewed: LiveData<List<Hotels>> = _recentlyViewed
+
+    init {
+        viewModelScope.launch {
+            prefs.recentSearchesFlow.collect {
+                _recentSearches.value = it
+            }
+        }
+        viewModelScope.launch {
+            prefs.recentlyViewedFlow.collect {
+                _recentlyViewed.value = it
+            }
+        }
+    }
 
     fun addSearch(query: String) {
         if (query.isBlank()) return
-        val parts = query.split(",").map { it.trim() }
-        val name = parts.getOrNull(0).orEmpty()
-        val location = parts.getOrNull(1).orEmpty()
-        val entry = RecentSearch(name, location)
+        val parts    = query.split(",").map { it.trim() }
+        val entry    = RecentSearch(parts.getOrNull(0).orEmpty(),
+            parts.getOrNull(1).orEmpty())
+        val updated  = listOf(entry) + (_recentSearches.value ?: emptyList())
+            .filter { it.placeName != entry.placeName }
+            .take(9)
+        _recentSearches.value = updated
+        viewModelScope.launch { prefs.saveRecentSearches(updated) }
+    }
 
-        val updated = listOf(entry) + _recentSearches.value!!.filter { it.placeName != name }
-        _recentSearches.value = updated.take(10)
+    fun addToRecentlyViewed(hotel: Hotels) {
+        val current = (_recentlyViewed.value ?: emptyList()).toMutableList()
+        current.removeAll { it.id == hotel.id }
+        current.add(0, hotel)
+        val updated = current.take(10)
+        _recentlyViewed.value = updated
+
+        viewModelScope.launch { prefs.saveRecentlyViewed(updated) }
     }
 
     fun clearAllSearches() {
         _recentSearches.value = emptyList()
+        viewModelScope.launch { prefs.saveRecentSearches(emptyList()) }
     }
 }
