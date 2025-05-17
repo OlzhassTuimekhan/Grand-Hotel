@@ -20,7 +20,6 @@ class Onboarding2Fragment : Fragment() {
         val buttonContinue = view.findViewById<Button>(R.id.buttonContinue2)
 
         buttonContinue.setOnClickListener {
-            // Переходим на следующий фрагмент
             findNavController().navigate(R.id.action_onboarding2_to_onboarding3)
         }
 
