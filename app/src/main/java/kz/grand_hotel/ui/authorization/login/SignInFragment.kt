@@ -41,13 +41,7 @@ class SignInFragment : Fragment() {
     private var isPasswordVisible = false
     private val client = OkHttpClient()
 
-//  Sign in
-    //New Commit
-    //new Commit
-    //New Commit
-    //New Commit
-    //New Commit
-    //New Commit
+//  Sign i
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
